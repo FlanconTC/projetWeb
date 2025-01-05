@@ -17,8 +17,8 @@ security:
                 target: app_home_page
 
     access_control:
-        - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/dev, roles: ROLE_DEV }
+        - { path: ^/company, roles: ROLE_COMPANY }
 
 
 when@test:

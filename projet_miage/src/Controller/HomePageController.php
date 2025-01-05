@@ -12,11 +12,8 @@ class HomePageController extends AbstractController
     #[Route('/', name: 'app_home_page')]
     public function index(Security $security): Response
     {
-
         // Vérifier si l'utilisateur est authentifié
-        if (!$security->getUser()) 
-        {
-          
+        if (!$security->getUser()) {
             return $this->redirectToRoute('app_login');
         }
 
