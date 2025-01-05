@@ -25,6 +25,11 @@ class Analytics
     #[ORM\Column]
     private ?\DateTimeImmutable $lastViewedAt = null;
 
+    public function __construct()
+    {
+        $this->lastViewedAt = new \DateTimeImmutable();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
