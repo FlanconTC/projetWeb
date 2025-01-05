@@ -23,14 +23,26 @@ SET time_zone = "+00:00";
 
 -- --------------------------------------------------------
 
+CREATE TABLE `favoris` (
+  `id` int(11) NOT NULL,
+  `id_favoris` int(11) DEFAULT NULL
+);
+
+CREATE TABLE `langage_de_prog` (
+  `id` int(11) NOT NULL,
+  `langage_de_prog` varchar(255) NOT NULL
+);
+
+CREATE TABLE `langage_developpeur` (
+ `id` int(11) NOT NULL,
+  `id_langage` int(11) DEFAULT NULL
+);
+
 --
 -- Structure de la table `dev`
 --
-
 CREATE TABLE `dev` (
   `id` int(11) NOT NULL,
-  `favoris_dev_id` int(11) DEFAULT NULL,
-  `langages_de_prog` varchar(255) DEFAULT NULL,
   `niveau_experience` varchar(255) DEFAULT NULL,
   `salaire_min` int(11) DEFAULT NULL,
   `biographie` longtext DEFAULT NULL,
@@ -57,7 +69,6 @@ CREATE TABLE `entreprise` (
 
 CREATE TABLE `fiche_de_poste` (
   `id` int(11) NOT NULL,
-  `dev_id` int(11) DEFAULT NULL,
   `titre_poste` varchar(255) DEFAULT NULL,
   `technologies_recherchees` varchar(255) DEFAULT NULL,
   `niveau_exp_requis` int(11) DEFAULT NULL,
@@ -145,8 +156,7 @@ CREATE TABLE `utilisateur` (
 -- Index pour la table `dev`
 --
 ALTER TABLE `dev`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `IDX_1173F1059E47C30D` (`favoris_dev_id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Index pour la table `entreprise`
@@ -159,8 +169,7 @@ ALTER TABLE `entreprise`
 -- Index pour la table `fiche_de_poste`
 --
 ALTER TABLE `fiche_de_poste`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `IDX_C9606A6FA421F7B0` (`dev_id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Index pour la table `historique`
@@ -175,6 +184,22 @@ ALTER TABLE `matching`
   ADD PRIMARY KEY (`id`),
   ADD KEY `IDX_DC10F289A421F7B0` (`dev_id`),
   ADD KEY `IDX_DC10F289A4AEAFEA` (`entreprise_id`);
+
+--
+-- Index pour la table `langage_de_prog`
+--
+ALTER TABLE `langage_de_prog`
+  ADD PRIMARY KEY (`id`);
+
+
+ALTER TABLE `langage_developpeur`
+  ADD PRIMARY KEY (`id`,`id_langage`);
+
+--
+-- Index pour la table `favoris`
+--
+ALTER TABLE `favoris`
+  ADD PRIMARY KEY(`id`, `id_favoris`);
 
 --
 -- Index pour la table `messagerie`
@@ -227,6 +252,9 @@ ALTER TABLE `matching`
 ALTER TABLE `messagerie`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+
+ALTER TABLE `langage_de_prog`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `note`
 --
@@ -247,7 +275,6 @@ ALTER TABLE `utilisateur`
 -- Contraintes pour la table `dev`
 --
 ALTER TABLE `dev`
-  ADD CONSTRAINT `FK_1173F1059E47C30D` FOREIGN KEY (`favoris_dev_id`) REFERENCES `entreprise` (`id`),
   ADD CONSTRAINT `FK_1173F105BF396750` FOREIGN KEY (`id`) REFERENCES `utilisateur` (`id`) ON DELETE CASCADE;
 
 --
@@ -256,12 +283,6 @@ ALTER TABLE `dev`
 ALTER TABLE `entreprise`
   ADD CONSTRAINT `FK_D19FA60BF396750` FOREIGN KEY (`id`) REFERENCES `utilisateur` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `FK_D19FA60F76AAB91` FOREIGN KEY (`fiche_de_poste_id`) REFERENCES `fiche_de_poste` (`id`);
-
---
--- Contraintes pour la table `fiche_de_poste`
---
-ALTER TABLE `fiche_de_poste`
-  ADD CONSTRAINT `FK_C9606A6FA421F7B0` FOREIGN KEY (`dev_id`) REFERENCES `dev` (`id`);
 
 --
 -- Contraintes pour la table `matching`
@@ -289,6 +310,14 @@ ALTER TABLE `note`
 --
 ALTER TABLE `utilisateur`
   ADD CONSTRAINT `FK_1D1C63B36128735E` FOREIGN KEY (`historique_id`) REFERENCES `historique` (`id`);
+
+ALTER TABLE `favoris`
+  ADD FOREIGN KEY (`id`) REFERENCES `dev` (`id`),
+  ADD FOREIGN KEY (`id_favoris`) REFERENCES `dev` (`id`);
+
+ALTER TABLE `langage_developpeur`
+  ADD FOREIGN KEY (`id`) REFERENCES `dev` (`id`),
+  ADD FOREIGN KEY (`id_langage`) REFERENCES `langage_de_prog` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
