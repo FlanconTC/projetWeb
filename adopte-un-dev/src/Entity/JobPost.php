@@ -18,7 +18,7 @@ class JobPost
 
     #[ORM\ManyToOne(inversedBy: 'jobPosts')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?user $company = null;
+    private ?User $company = null;
 
     #[ORM\Column(length: 255)]
     private ?string $title = null;
@@ -65,12 +65,12 @@ class JobPost
         return $this->id;
     }
 
-    public function getCompany(): ?user
+    public function getCompany(): ?User
     {
         return $this->company;
     }
 
-    public function setCompany(?user $company): static
+    public function setCompany(?User $company): static
     {
         $this->company = $company;
 
