@@ -36,6 +36,9 @@ abstract class Utilisateur
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $localisation = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $password = null;
+
     #[ORM\ManyToOne(inversedBy: 'idUser')]
     private ?Historique $historique = null;
 
@@ -64,6 +67,18 @@ abstract class Utilisateur
     public function setRole(?string $role): static
     {
         $this->role = $role;
+
+        return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(?string $password): static
+    {
+        $this->password = $password;
 
         return $this;
     }

@@ -14,7 +14,7 @@ class Dev extends Utilisateur
     private ?string $langagesDeProg = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $niveauExperience = null;
+    private ?string $niveauExperience = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $salaireMin = null;
@@ -51,12 +51,12 @@ class Dev extends Utilisateur
         return $this;
     }
 
-    public function getNiveauExperience(): ?int
+    public function getNiveauExperience(): ?string
     {
         return $this->niveauExperience;
     }
 
-    public function setNiveauExperience(?int $niveauExperience): static
+    public function setNiveauExperience(?string $niveauExperience): static
     {
         $this->niveauExperience = $niveauExperience;
 

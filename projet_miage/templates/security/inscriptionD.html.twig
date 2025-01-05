@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un nouveau Dev{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-3" style="background-color:grey">
+            </div>
+            <div class="col-sm-6" style="text-align:center">
+                <div class="login-container">
+                    <h1><u>Créer un compte - Développeur</u></h1>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-sm-3">
+                            </div>
+                            <div class="col-sm-6" style="text-align:center">
+                                {% if form_errors(form.salaireMin) != null %}
+                                    <div class="mt-4 p-5 bg-danger text-white rounded">
+                                        <h3>Le salaire doit être un nombre</h3>
+                                    </div>
+                                {% endif %}
+                                {{ form_start(form, {'attr': {'class': 'container mt-4'}}) }}                      
+                                    {{ form_label(form.nom, null, {'label_attr': {'class': 'form-label'}}) }}
+                                    {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+
+                                    {{ form_label(form.role, null, {'label_attr': {'class': 'form-label'}}) }}
+                                    {{ form_widget(form.role, {'attr': {'class': 'form-control'}}) }}
+        
+                                    {{ form_label(form.profile, null, {'label_attr': {'class': 'form-label'}}) }}
+                                    {{ form_widget(form.profile, {'attr': {'class': 'form-control'}}) }}
+        
+                                    {{ form_label(form.localisation, null, {'label_attr': {'class': 'form-label'}}) }}
+                                    {{ form_widget(form.localisation, {'attr': {'class': 'form-control'}}) }}
+            
+                                    {{ form_label(form.password, null, {'label_attr': {'class': 'form-label'}}) }}
+                                    {{ form_widget(form.password, {'attr': {'class': 'form-control'}}) }}
+                
+                                    {{ form_label(form.langagesDeProg, null, {'label_attr': {'class': 'form-label'}}) }}
+                                    {{ form_widget(form.langagesDeProg, {'attr': {'class': 'form-control'}}) }}
+                
+                                    {{ form_label(form.niveauExperience, null, {'label_attr': {'class': 'form-label'}}) }}
+                                    {{ form_widget(form.niveauExperience, {'attr': {'class': 'form-control'}}) }}
+    
+                                    {{ form_label(form.salaireMin, null, {'label_attr': {'class': 'form-label'}}) }}
+                                    {{ form_widget(form.salaireMin, {'attr': {'class': 'form-control'}}) }}
+        
+                                    {{ form_label(form.biographie, null, {'label_attr': {'class': 'form-label'}}) }}
+                                    {{ form_widget(form.biographie, {'attr': {'class': 'form-control', 'rows': 5}}) }}
+        
+                                    {{ form_label(form.avatar, null, {'label_attr': {'class': 'form-label'}}) }}
+                                    {{ form_widget(form.avatar, {'attr': {'class': 'form-control'}}) }}
+        
+                                    {{ form_label(form.nbVues, null, {'label_attr': {'class': 'form-label'}}) }}
+                                    {{ form_widget(form.nbVues, {'attr': {'class': 'form-control'}}) }}
+                
+                                    {{ form_label(form.historique, null, {'label_attr': {'class': 'form-label'}}) }}
+                                    {{ form_widget(form.historique, {'attr': {'class': 'form-control'}}) }}
+        
+                                    {{ form_label(form.favorisDev, null, {'label_attr': {'class': 'form-label'}}) }}
+                                    {{ form_widget(form.favorisDev, {'attr': {'class': 'form-control'}}) }}
+            
+                                    <div class="form-group mt-3">
+                                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                    </div>
+                                {{ form_end(form) }}
+                            </div>
+                            <div class="col-sm-3">
+                            </div>
+                        </div>
+                     </div>
+                </div>
+            </div>
+            <div class="col-sm-3"  style="background-color:grey">
+            </div>
+        </div>
+    </div>
+{% endblock %}
