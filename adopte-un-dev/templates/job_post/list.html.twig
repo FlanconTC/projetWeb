@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Fiches de Poste{% endblock %}
+
+{% block body %}
+    <h1>Liste des Fiches de Poste</h1>
+
+    <ul>
+        {% for jobPost in jobPosts %}
+            <li>
+                <strong>{{ jobPost.title }}</strong> - {{ jobPost.location }}
+                <a href="{{ path('app_login', { id: jobPost.id }) }}">Modifier</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
