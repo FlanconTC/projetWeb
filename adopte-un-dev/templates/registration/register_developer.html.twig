@@ -1,9 +1,74 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Inscription - Développeur</h1>
-    {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <button class="btn btn-primary" type="submit">S'inscrire</button>
-    {{ form_end(form) }}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0 text-center">Inscription - Développeur</h2>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+                    
+                    <h4 class="mb-3">Informations utilisateur</h4>
+                    <div class="form-group mb-3">
+                        {{ form_label(form.username, 'Nom d\'utilisateur', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.username, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.username) }}
+                    </div>
+                    <div class="form-group mb-3">
+                        {{ form_label(form.email, 'Adresse email', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.email) }}
+                    </div>
+                    <div class="form-group mb-3">
+                        {{ form_label(form.plainPassword, 'Mot de passe', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.plainPassword, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.plainPassword) }}
+                    </div>
+
+                    <h4 class="mb-3 mt-4">Profil développeur</h4>
+                    <div class="form-group mb-3">
+                        {{ form_label(form.developerProfile.location, 'Localisation', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.developerProfile.location, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.developerProfile.location) }}
+                    </div>
+                    <div class="form-group mb-3">
+                        {{ form_label(form.developerProfile.programmingLanguages, 'Langages de programmation', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.developerProfile.programmingLanguages, {'attr': {'class': 'form-select'}}) }}
+                        {{ form_errors(form.developerProfile.programmingLanguages) }}
+                    </div>
+                    <div class="form-group mb-3">
+                        {{ form_label(form.developerProfile.experienceLevel, 'Niveau d\'expérience', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.developerProfile.experienceLevel, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.developerProfile.experienceLevel) }}
+                    </div>
+                    <div class="form-group mb-3">
+                        {{ form_label(form.developerProfile.minimunSalary, 'Salaire minimum souhaité', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.developerProfile.minimunSalary, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.developerProfile.minimunSalary) }}
+                    </div>
+                    <div class="form-group mb-3">
+                        {{ form_label(form.developerProfile.biography, 'Biographie', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.developerProfile.biography, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.developerProfile.biography) }}
+                    </div>
+                    <div class="form-group mb-3">
+                        {{ form_label(form.developerProfile.avatar, 'Avatar (image)', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.developerProfile.avatar, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.developerProfile.avatar) }}
+                    </div>
+
+                    <div class="d-grid">
+                        <button class="btn btn-primary btn-lg" type="submit">S'inscrire</button>
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
+

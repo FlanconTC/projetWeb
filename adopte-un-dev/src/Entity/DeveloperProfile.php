@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: DeveloperProfileRepository::class)]
 class DeveloperProfile
@@ -26,9 +27,29 @@ class DeveloperProfile
     #[ORM\Column(nullable: true)]
     private ?array $programmingLanguages = null;
 
+    #[Assert\NotBlank(message: 'Le niveau d\'expérience est requis.')]
+    #[Assert\Type(
+        type: 'integer',
+        message: 'Le niveau d\'expérience doit être un nombre entier.'
+    )]
+    #[Assert\Range(
+        min: 0,
+        max: 5,
+        notInRangeMessage: 'Le niveau d\'expérience doit être compris entre {{ min }} et {{ max }}.',
+    )]
     #[ORM\Column(nullable: true)]
     private ?int $experienceLevel = null;
 
+    #[Assert\NotBlank(message: 'Le salaire minimum est requis.')]
+    #[Assert\Type(
+        type: 'integer',
+        message: 'Le salaire minimum doit être un nombre entier.'
+    )]
+    #[Assert\Range(
+        min: 0,
+        max: 100000,
+        notInRangeMessage: 'Le salaire minimum doit être compris entre {{ min }} et {{ max }} euros.',
+    )]
     #[ORM\Column(nullable: true)]
     private ?int $minimunSalary = null;
 
@@ -90,7 +111,7 @@ class DeveloperProfile
         return $this->programmingLanguages;
     }
 
-    public function setProgrammingLanguages(?array $programmingLanguages): static
+    public function setProgrammingLanguages(?array $programmingLanguages): self
     {
         $this->programmingLanguages = $programmingLanguages;
 

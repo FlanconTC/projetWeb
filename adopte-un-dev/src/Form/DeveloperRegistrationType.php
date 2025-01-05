@@ -1,12 +1,14 @@
 <?php
-
 namespace App\Form;
 
+use App\Entity\DeveloperProfile;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -16,10 +18,13 @@ class DeveloperRegistrationType extends AbstractType
     {
         $builder
             ->add('username', TextType::class, ['label' => 'Nom d\'utilisateur'])
-            ->add('email', EmailType::class, ['label' => 'Adresse email'])
-            ->add('plainPassword', PasswordType::class, [
+            ->add('email', TextType::class, ['label' => 'Adresse email'])
+            ->add('plainPassword', TextType::class, [
                 'mapped' => false,
                 'label' => 'Mot de passe',
+            ])
+            ->add('developerProfile', DeveloperProfileType::class, [
+                'label' => false, // Désactive le label pour le sous-formulaire
             ]);
     }
 

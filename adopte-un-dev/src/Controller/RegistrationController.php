@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\DeveloperProfile;
 use App\Form\DeveloperRegistrationType;
 use App\Form\CompanyRegistrationType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,24 +19,35 @@ class RegistrationController extends AbstractController
     {
         $user = new User();
         $user->setRoles(['ROLE_DEV']);
-
+        $profile = new DeveloperProfile();
+        $user->setDeveloperProfile($profile);
+    
         $form = $this->createForm(DeveloperRegistrationType::class, $user);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
+            // Hachage du mot de passe
             $hashedPassword = $passwordHasher->hashPassword($user, $form->get('plainPassword')->getData());
             $user->setPassword($hashedPassword);
-
+        
+            // Gestion de l'avatar
+            $avatarFile = $form->get('developerProfile')->get('avatar')->getData();
+            if ($avatarFile) {
+                $avatarData = file_get_contents($avatarFile->getPathname()); // Convertit en BLOB
+                $user->getDeveloperProfile()->setAvatar($avatarData);
+            }
+        
             $entityManager->persist($user);
             $entityManager->flush();
-
+        
             return $this->redirectToRoute('app_login');
         }
-
+    
         return $this->render('registration/register_developer.html.twig', [
             'form' => $form->createView(),
         ]);
     }
+    
 
     #[Route('/register/company', name: 'register_company')]
     public function registerCompany(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
