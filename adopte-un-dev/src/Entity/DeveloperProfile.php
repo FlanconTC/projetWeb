@@ -56,8 +56,8 @@ class DeveloperProfile
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $biography = null;
 
-    #[ORM\Column(type: Types::BLOB, nullable: true)]
-    private $avatar;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $avatar = null;
 
     /**
      * @var Collection<int, Favorites>
@@ -154,12 +154,12 @@ class DeveloperProfile
         return $this;
     }
 
-    public function getAvatar()
+    public function getAvatar(): ?string
     {
         return $this->avatar;
     }
 
-    public function setAvatar($avatar): static
+    public function setAvatar(?string $avatar): static
     {
         $this->avatar = $avatar;
 

@@ -11,11 +11,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Service\FileUploader;
 
 class RegistrationController extends AbstractController
 {
     #[Route('/register/developer', name: 'register_developer')]
-    public function registerDeveloper(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
+    public function registerDeveloper(Request $request, FileUploader $fileUploader, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
         $user = new User();
         $user->setRoles(['ROLE_DEV']);
@@ -30,11 +31,11 @@ class RegistrationController extends AbstractController
             $hashedPassword = $passwordHasher->hashPassword($user, $form->get('plainPassword')->getData());
             $user->setPassword($hashedPassword);
         
-            // Gestion de l'avatar
+            // Gestion de l'avatar avec le Service FileUploader
             $avatarFile = $form->get('developerProfile')->get('avatar')->getData();
             if ($avatarFile) {
-                $avatarData = file_get_contents($avatarFile->getPathname()); // Convertit en BLOB
-                $user->getDeveloperProfile()->setAvatar($avatarData);
+                $avatarFileName = $fileUploader->upload($avatarFile);
+                $user->getDeveloperProfile()->setAvatar($avatarFileName);
             }
         
             $entityManager->persist($user);
