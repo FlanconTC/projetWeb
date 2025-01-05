@@ -53,11 +53,18 @@ class JobPost
     #[ORM\OneToMany(targetEntity: Matching::class, mappedBy: 'jobPost')]
     private Collection $matchings;
 
+    /**
+     * @var Collection<int, Analytics>
+     */
+    #[ORM\OneToMany(targetEntity: Analytics::class, mappedBy: 'jobPost')]
+    private Collection $analytics;
+
     public function __construct()
     {
         $this->favorites = new ArrayCollection();
         $this->matchings = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
+        $this->analytics = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -215,6 +222,36 @@ class JobPost
             // set the owning side to null (unless already changed)
             if ($matching->getJobPost() === $this) {
                 $matching->setJobPost(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Analytics>
+     */
+    public function getAnalytics(): Collection
+    {
+        return $this->analytics;
+    }
+
+    public function addAnalytic(Analytics $analytic): static
+    {
+        if (!$this->analytics->contains($analytic)) {
+            $this->analytics->add($analytic);
+            $analytic->setJobPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAnalytic(Analytics $analytic): static
+    {
+        if ($this->analytics->removeElement($analytic)) {
+            // set the owning side to null (unless already changed)
+            if ($analytic->getJobPost() === $this) {
+                $analytic->setJobPost(null);
             }
         }
 

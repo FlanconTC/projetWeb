@@ -45,19 +45,19 @@ class DeveloperProfileType extends AbstractType
                     'class' => 'form-select'
                 ],
             ])
-            ->add('experienceLevel', ChoiceType::class, [
-                'label' => 'Niveau d\'expérience',
-                'choices' => [
-                    '0 - Débutant' => 0,
-                    '1' => 1,
-                    '2' => 2,
-                    '3' => 3,
-                    '4' => 4,
-                    '5 - Expert' => 5,
-                ],
-                'required' => true,
-                'attr' => ['class' => 'form-select'],
-            ])
+            // ->add('experienceLevel', ChoiceType::class, [
+            //     'label' => 'Niveau d\'expérience',
+            //     'choices' => [
+            //         '0 - Débutant' => 0,
+            //         '1' => 1,
+            //         '2' => 2,
+            //         '3' => 3,
+            //         '4' => 4,
+            //         '5 - Expert' => 5,
+            //     ],
+            //     'required' => true,
+            //     'attr' => ['class' => 'form-select'],
+            // ])
             ->add('minimunSalary', IntegerType::class, [
                 'label' => 'Salaire minimum souhaité',
                 'required' => true,
