@@ -61,14 +61,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var Collection<int, Message>
      */
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'sender')]
-    private Collection $messages;
+    private Collection $sentMessages;
+
+    /**
+     * @var Collection<int, Message>
+     */
+    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'receiver')]
+
+    private Collection $receivedMessages;
+    /**
+     * @var Collection<int, Evaluation>
+     */
+     #[ORM\OneToMany(targetEntity: Evaluation::class, mappedBy: 'evaluator')]
+     private Collection $givenEvaluations;
 
     /**
      * @var Collection<int, Evaluation>
      */
-    #[ORM\OneToMany(targetEntity: Evaluation::class, mappedBy: 'evaluator')]
-    private Collection $evaluations;
-
+     #[ORM\OneToMany(targetEntity: Evaluation::class, mappedBy: 'evaluatee')]
+     private Collection $receivedEvaluations;
+     
     /**
      * @var Collection<int, Analytics>
      */
@@ -86,8 +98,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->jobPosts = new ArrayCollection();
         $this->favorites = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
-        $this->messages = new ArrayCollection();
-        $this->evaluations = new ArrayCollection();
+        $this->sentMessages = new ArrayCollection();
+        $this->receivedMessages = new ArrayCollection();
+        $this->givenEvaluations = new ArrayCollection();
+        $this->receivedEvaluations = new ArrayCollection();
         $this->analytics = new ArrayCollection();
         $this->notifications = new ArrayCollection();
     }
@@ -268,63 +282,100 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, Message>
-     */
-    public function getMessages(): Collection
+    public function getSentMessages(): Collection
     {
-        return $this->messages;
+        return $this->sentMessages;
     }
-
-    public function addMessage(Message $message): static
+    
+    public function addSentMessage(Message $message): static
     {
-        if (!$this->messages->contains($message)) {
-            $this->messages->add($message);
+        if (!$this->sentMessages->contains($message)) {
+            $this->sentMessages->add($message);
             $message->setSender($this);
         }
-
         return $this;
     }
-
-    public function removeMessage(Message $message): static
+    
+    public function removeSentMessage(Message $message): static
     {
-        if ($this->messages->removeElement($message)) {
-            // set the owning side to null (unless already changed)
+        if ($this->sentMessages->removeElement($message)) {
             if ($message->getSender() === $this) {
                 $message->setSender(null);
             }
         }
-
         return $this;
     }
-
-    /**
-     * @return Collection<int, Evaluation>
-     */
-    public function getEvaluations(): Collection
+    
+    public function getReceivedMessages(): Collection
     {
-        return $this->evaluations;
+        return $this->receivedMessages;
     }
-
-    public function addEvaluation(Evaluation $evaluation): static
+    
+    public function addReceivedMessage(Message $message): static
     {
-        if (!$this->evaluations->contains($evaluation)) {
-            $this->evaluations->add($evaluation);
+        if (!$this->receivedMessages->contains($message)) {
+            $this->receivedMessages->add($message);
+            $message->setReceiver($this);
+        }
+        return $this;
+    }
+    
+    public function removeReceivedMessage(Message $message): static
+    {
+        if ($this->receivedMessages->removeElement($message)) {
+            if ($message->getReceiver() === $this) {
+                $message->setReceiver(null);
+            }
+        }
+        return $this;
+    }
+    
+    public function getGivenEvaluations(): Collection
+    {
+        return $this->givenEvaluations;
+    }
+    
+    public function addGivenEvaluation(Evaluation $evaluation): static
+    {
+        if (!$this->givenEvaluations->contains($evaluation)) {
+            $this->givenEvaluations->add($evaluation);
             $evaluation->setEvaluator($this);
         }
-
         return $this;
     }
-
-    public function removeEvaluation(Evaluation $evaluation): static
+    
+    public function removeGivenEvaluation(Evaluation $evaluation): static
     {
-        if ($this->evaluations->removeElement($evaluation)) {
-            // set the owning side to null (unless already changed)
+        if ($this->givenEvaluations->removeElement($evaluation)) {
             if ($evaluation->getEvaluator() === $this) {
                 $evaluation->setEvaluator(null);
             }
         }
-
+        return $this;
+    }
+    
+    // Getter and setter for receivedEvaluations
+    public function getReceivedEvaluations(): Collection
+    {
+        return $this->receivedEvaluations;
+    }
+    
+    public function addReceivedEvaluation(Evaluation $evaluation): static
+    {
+        if (!$this->receivedEvaluations->contains($evaluation)) {
+            $this->receivedEvaluations->add($evaluation);
+            $evaluation->setEvaluatee($this);
+        }
+        return $this;
+    }
+    
+    public function removeReceivedEvaluation(Evaluation $evaluation): static
+    {
+        if ($this->receivedEvaluations->removeElement($evaluation)) {
+            if ($evaluation->getEvaluatee() === $this) {
+                $evaluation->setEvaluatee(null);
+            }
+        }
         return $this;
     }
 

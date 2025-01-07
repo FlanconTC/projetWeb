@@ -14,11 +14,11 @@ class Evaluation
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'evaluations')]
+    #[ORM\ManyToOne(inversedBy: 'givenEvaluations')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $evaluator = null;
-
-    #[ORM\ManyToOne(inversedBy: 'evaluations')]
+    
+    #[ORM\ManyToOne(inversedBy: 'receivedEvaluations')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $evaluatee = null;
 
