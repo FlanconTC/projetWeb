@@ -11,11 +11,11 @@
         "doctrine/doctrine-bundle": "^2.13",
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "^3.3.1",
-<<<<<<< HEAD
+
         "symfony/asset": "7.2.*",
-=======
+
         "symfony/asset-mapper": "7.2.*",
->>>>>>> 4a9b5d464379fde2450a78e384125eb1323537f1
+
         "symfony/console": "7.2.*",
         "symfony/dotenv": "7.2.*",
         "symfony/flex": "^2.4.7",
