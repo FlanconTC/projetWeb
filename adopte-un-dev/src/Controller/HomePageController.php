@@ -34,7 +34,7 @@ class HomePageController extends AbstractController
         {
             return $this->redirectToRoute('app_login');
         }
-
+        $listeDevPourSwipe = [];
         $userC = $security->getUser();
         $roles = $userC->getRoles();
 
