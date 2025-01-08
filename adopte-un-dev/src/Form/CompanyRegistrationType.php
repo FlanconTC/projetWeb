@@ -16,7 +16,7 @@ class CompanyRegistrationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('username', TextType::class, ['label' => 'Nom de l\'Entreprise'])
+            ->add('username', TextType::class, ['label' => 'Nom d\'utilisateur'])
             ->add('email', EmailType::class, ['label' => 'Adresse email de l\'Entreprise'])
             ->add('plainPassword', PasswordType::class, [
                 'mapped' => false,

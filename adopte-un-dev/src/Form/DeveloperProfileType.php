@@ -85,7 +85,7 @@ class DeveloperProfileType extends AbstractType
                 'label' => 'Avatar (image)',
                 'required' => false,
                 'mapped' => false, // Ne lie pas directement à l'entité (doit être géré manuellement)
-                'attr' => ['class' => 'form-control-file'],
+                'attr' => ['class' => 'form-control-file form-control'],
             ]);
     }
 
