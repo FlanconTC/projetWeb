@@ -6,6 +6,7 @@ use App\Entity\DeveloperProfile;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -23,7 +24,14 @@ class UserEditType extends AbstractType
                 'label_html' => true,
                 'label' => '<i class="fas fa-envelope"></i> <strong>Email :</strong>',
                 'attr' => ['class' => 'form-control'],
+            ])
+            ->add('plainPassword', PasswordType::class, [
+                'mapped' => false,
+                'label_html' => true,
+                'label' => '<i class="fas fa-lock"></i> <strong>Mot de passe</strong>',
+                'attr' => ['class' => 'form-control'],
             ]);
+            
 
         // Ajouter les champs spécifiques au profil développeur si c'est un développeur
         if ($options['data']->getDeveloperProfile()) {

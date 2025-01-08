@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class ProfileController extends AbstractController
 {
@@ -30,7 +31,7 @@ class ProfileController extends AbstractController
     }
 
     #[Route('/profile/edit/dev', name: 'profile_edit_dev')]
-    public function editDev(Request $request, EntityManagerInterface $entityManager, FileUploader $fileUploader): Response
+    public function editDev(Request $request, EntityManagerInterface $entityManager, FileUploader $fileUploader, UserPasswordHasherInterface $passwordHasher): Response
     {
         // Récupère l'utilisateur connecté
         $user = $this->getUser();
@@ -45,8 +46,14 @@ class ProfileController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Sauvegarde les modifications
+            $plainPassword = $form->get('plainPassword')->getData();
+            if ($plainPassword) {
+                $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
+                $user->setPassword($hashedPassword);
+            }
+
             $avatarFile = $form->get('developerProfile')->get('avatar')->getData();
-            
+
             if ($avatarFile) {
 
                 $oldAvatar = $user->getDeveloperProfile()->getAvatar();
@@ -75,7 +82,7 @@ class ProfileController extends AbstractController
     }
 
     #[Route('/profile/edit/company', name: 'profile_edit_company')]
-    public function editComapny(Request $request, EntityManagerInterface $entityManager): Response
+    public function editComapny(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
         $user = $this->getUser();
 
@@ -87,7 +94,11 @@ class ProfileController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($user);
+            $plainPassword = $form->get('plainPassword')->getData();
+            if ($plainPassword) {
+                $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
+                $user->setPassword($hashedPassword);
+            }
             $entityManager->flush();
 
             $this->addFlash('success', 'Votre profil a été mis à jour avec succès.');

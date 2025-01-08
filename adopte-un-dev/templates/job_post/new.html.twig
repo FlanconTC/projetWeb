@@ -1,12 +1,31 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Créer une Fiche de Poste{% endblock %}
+{% block title %}Modifier Profil
+{% endblock %}
 
 {% block body %}
-    <h1>Créer une Fiche de Poste</h1>
+	{% for message in app.flashes('success') %}
+		<div class="alert alert-success">{{ message }}</div>
+	{% endfor %}
+	{% for message in app.flashes('danger') %}
+		<div class="alert alert-danger">{{ message }}</div>
+	{% endfor %}
+	<div class="container mt-5">
+		<div class="row justify-content-center">
+			<div class="col-md-8">
+				<div class="card">
+					<div class="card-header bg-primary text-white text-center">
+						<h2>Créer une fiche de Poste</h2>
+					</div>
+					<div class="card-body">
 
-    {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <button type="submit" class="btn btn-primary">Créer</button>
-    {{ form_end(form) }}
+						{{ form_start(form) }}
+						{{ form_widget(form) }}
+						<button type="submit" class="btn btn-primary">Créer</button>
+						{{ form_end(form) }}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}

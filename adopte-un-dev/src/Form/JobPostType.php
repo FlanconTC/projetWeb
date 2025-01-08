@@ -20,16 +20,17 @@ class JobPostType extends AbstractType
         $builder
             ->add('title', TextType::class, [
                 'label' => 'Titre du poste',
-                'attr' => ['class' => 'form-control'],
+                'attr' => ['class' => 'form-control mb-3'],
             ])
             ->add('location', TextType::class, [
                 'label_html' => true,
                 'label' => '<i class="fas fa-map-marker-alt"></i> <strong>Localisation :</strong>',
                 'required' => false,
-                'attr' => ['class' => 'form-control'],
+                'attr' => ['class' => 'form-control mb-3'],
             ])
             ->add('requiredTechnologies', ChoiceType::class, [
-                'label' => 'Technologies recherchées',
+                'label_html' => true,
+                'label' => '<i class="fas fa-code"></i> <strong>Technologies recherchées :</strong>',
                 'choices' => [
                     'PHP' => 'php',
                     'JavaScript' => 'javascript',
@@ -48,29 +49,40 @@ class JobPostType extends AbstractType
                 'expanded' => false,
                 'attr' => [
                     'id' => 'job_post_requiredTechnologies',
-                    'class' => 'form-select'
+                    'class' => 'form-select mb-3'
                 ],
             ])
-            ->add('requiredExperience', IntegerType::class, [
-                'label' => 'Niveau d\'expérience requis (en années)',
+            ->add('requiredExperience', ChoiceType::class, [
+                'label_html' => true,
+                'label' => '<i class="fas fa-user"></i> <strong>Niveau d\'expérience requis :</strong>',
+                'choices' => [
+                    '0 - Débutant' => 0,
+                    '1' => 1,
+                    '2' => 2,
+                    '3' => 3,
+                    '4' => 4,
+                    '5 - Expert' => 5,
+                ],
                 'required' => false,
-                'attr' => ['class' => 'form-control'],
+                'attr' => ['class' => 'form-control mb-3'],
             ])
             ->add('offeredSalary', IntegerType::class, [
-                'label' => 'Salaire proposé',
+                'label_html' => true,
+                'label' => '<i class="fas fa-euro-sign"></i> <strong>Salaire proposé :</strong>',
                 'required' => false,
-                'attr' => ['class' => 'form-control'],
+                'attr' => ['class' => 'form-control mb-3'],
             ])
             ->add('description', TextareaType::class, [
-                'label' => 'Description détaillée',
+                'label_html' => true,
+                'label' => '<i class="fas fa-info-circle"></i> <strong>Description détaillée :</strong>',
                 'required' => false,
-                'attr' => ['class' => 'form-control'],
+                'attr' => ['class' => 'form-control mb-3', 'rows' => 5],
             ])
             ->add('company', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => 'username', // ou 'email' si vous préférez et faire en sorte de ne pas pouvoir le modifier (hidden)
                 'label' => 'Entreprise',
-                'attr' => ['class' => 'form-control'],
+                'attr' => ['class' => 'form-control mb-3'],
             ])
         ;
     }
