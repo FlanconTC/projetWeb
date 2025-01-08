@@ -1,4 +1,3 @@
-
 {% block nav %}
 <div class="container">
     <nav class="navbar navbar-expand-lg bg-light">
@@ -37,14 +36,11 @@
                             <li><a class="dropdown-item" href="{{ path('app_logout') }}" onclick="window.location.href=this.href;">Déconnexion</a></li>
                         </ul>
                     </li>
-               
-                   
                 </ul>
                 <form class="d-flex  ms-auto" role="search" action="/search" method="GET" >
                         <input class="form-control me-2" type="search" name="q" placeholder="Un poste en vue ?" aria-label="Search">
                     <button class="btn btn-outline-success me-2" type="submit">Rechercher</button>
                 </form>
-                 <a href="{{ path('app_logout')}}" ><button class="btn btn-outline-danger ms-auto" type="submit">Log out</button></a>
             </div>
         </div>
     </nav>
