@@ -9,6 +9,7 @@ use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -109,5 +110,20 @@ class ProfileController extends AbstractController
         return $this->render('profile/edit_company.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    #[Route('/profile/prive', name: 'profile_prive')]
+    public function prive( EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+
+        if (!$user) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour accéder à cette page.');
+        }
+
+       
+        $user->setPrive(!$user->getPrive());
+        $entityManager->flush();
+        return $this->redirectToRoute('profile_view');
     }
 }

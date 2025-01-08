@@ -79,7 +79,7 @@ function paramOk()
         // ici faire les vérification de filtre
         // tech
         // loc
-        // salaire
+        // salaire OK FAIRE ATTENTION FICHE POSTE
         // note
         // poste/ dev OK
 

@@ -37,17 +37,27 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Bouton Modifier -->
-            {% if user.developerProfile %}
-                <div class="text-center mt-4">
-                    <a href="{{ path('profile_edit_dev') }}" class="btn btn-primary btn-lg shadow">Modifier mon profil</a>
-                </div>
-            {% else %}
-                <div class="text-center mt-4">
-                    <a href="{{ path('profile_edit_company') }}" class="btn btn-primary btn-lg shadow">Modifier mon profil</a>
-                </div>
-            {% endif %}
+                <!-- Bouton Modifier -->
+                {% if user.developerProfile %}
+                    <div class="text-center mt-4">
+                        <a href="{{ path('profile_edit_dev') }}" class="btn btn-primary btn-lg shadow">Modifier mon profil</a>
+                    </div>
+                {% else %}
+                    <div class="text-center mt-4">
+                        <a href="{{ path('profile_edit_company') }}" class="btn btn-primary btn-lg shadow">Modifier mon profil</a>
+                    </div>
+                {% endif %}
+                <br>
+                {% if user.prive != true %}
+                    <div class="text-center mt-4">
+                        <a href="{{ path('profile_prive') }}" class="btn btn-danger btn-lg shadow">Passer mon compte en privé</a>
+                    </div>
+                {% else %}
+                    <div class="text-center mt-4">
+                        <a href="{{ path('profile_prive') }}" class="btn btn-warning btn-lg shadow">Passer mon compte en public</a>
+                    </div>
+                {% endif %}
+                <small>En mode privé, vous n'apparaissez plus dans le Matching, et vos informations sensibles sont cachées des autres utilisateurs.</small>
         </div>
     </div>
 </div>
