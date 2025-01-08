@@ -28,56 +28,46 @@ class HomePageController extends AbstractController
 
 
     #[Route('/date/{typeRecherche}', name: 'app_home_getusers')]
-    public function recupUsers($typeRecherche ,Security $security, UserRepository $userRepository, NormalizerInterface $normalizer, DeveloperProfileRepository $developerProfileRepository): JsonResponse
+    public function recupUsers($typeRecherche, Security $security, UserRepository $userRepository, NormalizerInterface $normalizer, DeveloperProfileRepository $developerProfileRepository): JsonResponse
     {
-        if (!$security->getUser()) 
-        {
+        if (!$security->getUser()) {
             return $this->redirectToRoute('app_login');
         }
         $listeDevPourSwipe = [];
         $userC = $security->getUser();
         $roles = $userC->getRoles();
-
-        if($typeRecherche == 'company')
-        {
+        if ($typeRecherche == 'company') {
             //recup l'ensemble des fiches de poste avec filtres
-        }
-        else
-        {
+        } else {
             $users = $userRepository->findUsersDev();
-            
             $usersTrimmed = $users;
-            foreach ($users as $key => $user) 
-            {
-                    if (in_array('ROLE_COMPANY', $user['roles'])) 
-                    {
-                        unset($usersTrimmed[$key]);
-                    }
+            foreach ($users as $key => $user) {
+                if (in_array('ROLE_COMPANY', $user['roles'])) {
+                    unset($usersTrimmed[$key]);
+                }
             }
-           
+
             $listeDevPourSwipe = [];
-            foreach ($usersTrimmed as $user) 
-            {
-                
+            foreach ($usersTrimmed as $user) {
+
                 $dev = $developerProfileRepository->findOneByUser($userRepository->findOneById($user['id']));
-                if($dev != null)
-                
-                $jsonBody = [
-                    'id_utilisateur' => $user['id'],
-                    'nom' => $user['username'],
-                    'email' => $user['email'],
-                    'location' => $dev->getLocation(),
-                    'prog' => $dev->getProgrammingLanguages(),
-                    'exp' =>$dev->getExperienceLevel() ,
-                    'minS' => $dev->getMinimunSalary(),
-                    'bio' => $dev->getBiography(),
-                    'icon' => $dev->getAvatar()
-                ];
-                array_push($listeDevPourSwipe,$jsonBody);
+                if ($dev != null)
+
+                    $jsonBody = [
+                        'id_utilisateur' => $user['id'],
+                        'nom' => $user['username'],
+                        'email' => $user['email'],
+                        'location' => $dev->getLocation(),
+                        'prog' => $dev->getProgrammingLanguages(),
+                        'exp' => $dev->getExperienceLevel(),
+                        'minS' => $dev->getMinimunSalary(),
+                        'bio' => $dev->getBiography(),
+                        'icon' => $dev->getAvatar()
+                    ];
+                array_push($listeDevPourSwipe, $jsonBody);
             }
         }
 
         return new JsonResponse(['users' => $listeDevPourSwipe]);
     }
-
 }
