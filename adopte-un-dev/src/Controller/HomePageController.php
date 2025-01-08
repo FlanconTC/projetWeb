@@ -27,8 +27,8 @@ class HomePageController extends AbstractController
     }
 
 
-    #[Route('/date', name: 'app_home_getusers')]
-    public function recupUsers(Security $security, UserRepository $userRepository, NormalizerInterface $normalizer, DeveloperProfileRepository $developerProfileRepository): JsonResponse
+    #[Route('/date/{typeRecherche}', name: 'app_home_getusers')]
+    public function recupUsers($typeRecherche ,Security $security, UserRepository $userRepository, NormalizerInterface $normalizer, DeveloperProfileRepository $developerProfileRepository): JsonResponse
     {
         if (!$security->getUser()) 
         {
@@ -38,7 +38,7 @@ class HomePageController extends AbstractController
         $userC = $security->getUser();
         $roles = $userC->getRoles();
 
-        if(in_array('ROLE_DEV', $roles))
+        if($typeRecherche == 'company')
         {
             //recup l'ensemble des fiches de poste avec filtres
         }

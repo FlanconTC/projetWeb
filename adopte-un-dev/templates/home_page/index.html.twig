@@ -17,6 +17,7 @@
                     <p id="user-name"></p>
                     <p id="user-email"></p>
                     <p id="user-bio"></p>
+                    <button id="next-user-btn">Suivant</button>
                 </div>
                 <div class="col-md-4">
                     <p id="user-location"></p>
@@ -25,10 +26,61 @@
                     <p id="user-minS"></p>
                 </div>
                    
-
-                    
-
-                    <button id="next-user-btn">Suivant</button>
+            </div>
+        </div>
+    </div>
+    <div class="mt-4 p-5 bg-dark text-white rounded">
+    
+        <div class="row">
+            <div class="col-md-4">
+                <h2>Paramètres de recherche :</h2>
+                <label>
+                    <input type="checkbox" id="dev">
+                    Voir des profils de développeurs
+                </label>
+                <br>
+                <label>
+                    <input type="checkbox" id="poste">
+                    Voir des fiches de poste
+                </label> 
+                <br>
+                <br>
+                <br>
+                <button type="button" id="valFiltre" class="btn btn-secondary">Appliquer les filtres</button>
+            </div>
+            <br>
+            <br>
+            Technologie(s) 
+            <br>
+            recherchée(s):
+            <br>
+            <br>
+            Localisation :
+            <div class="col-md-3">
+                <select id="multiSelect" multiple size="5">
+                    <option value="option1">PHP</option>
+                    <option value="option2">JavaScript</option>
+                    <option value="option3">Python</option>
+                    <option value="option4">Java</option>
+                    <option value="option5">C#</option>
+                    <option value="option6">C++</option>
+                    <option value="option7">Ruby</option>
+                    <option value="option8">Go</option>
+                    <option value="option9">Rust</option>
+                    <option value="option10">TypeScript</option>
+                    <option value="option11">Swift</option>
+                    <option value="option12">Kotlin</option>
+                </select>
+                <input type="textbox" id="localisation">
+            </div>
+            <div class="col-md-4">
+                <p id="salaireSouhait">Salaire souhaité (max) :</p>
+                <input type="numberbox" id="salaire">
+                <br>
+                <br>
+                <p>Note minimum :</p>
+                <input type="range" id="ratingInput" min="1" max="5" step="1" value="3">
+                <span id="ratingValue">3</span>
             </div>
         </div>
     </div>
