@@ -48,15 +48,12 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function findUsersDev()
     {
-  
-
-        $query = $this->createQueryBuilder('u')
-        ->select('u.id, u.username, u.roles, u.email')
-        ->andWhere('u.roles like :val')
-        ->andWhere('u.prive = 0')
-        ->setParameter('val', "%DEV%")
-        ->getQuery();
-
-        return $query->getResult();
+        return $this->createQueryBuilder('u')
+            ->select('u.id, u.username, u.roles, u.email')
+            ->andWhere('u.roles like :val')
+            ->andWhere('u.prive = 0')
+            ->setParameter('val', "%DEV%")
+            ->getQuery()
+            ->getResult();
     }
 }
