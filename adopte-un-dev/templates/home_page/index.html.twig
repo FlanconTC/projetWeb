@@ -6,15 +6,32 @@
 
 {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
 
+<div class="container">
+    <div class="mt-4 p-5 bg-dark text-white rounded">
+        <div id="user-info-container">
+            <div class="row">
+                <div class="col-md-4">
+                    <img id="user-icon" alt="User Avatar" />
+                </div>
+                <div class="col-md-4">
+                    <p id="user-name"></p>
+                    <p id="user-email"></p>
+                    <p id="user-bio"></p>
+                </div>
+                <div class="col-md-4">
+                    <p id="user-location"></p>
+                    <p id="user-prog"></p>
+                    <p id="user-exp"></p>
+                    <p id="user-minS"></p>
+                </div>
+                   
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+                    
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/xampp/htdocs/pwproj/projetWeb/projet_miage/src/Controller/HomePageController.php</code></li>
-        <li>Your template at <code>C:/xampp/htdocs/pwproj/projetWeb/projet_miage/templates/home_page/index.html.twig</code></li>
-    </ul>
+                    <button id="next-user-btn">Suivant</button>
+            </div>
+        </div>
+    </div>
 </div>
 {% endif %}
 

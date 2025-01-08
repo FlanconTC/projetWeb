@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\DeveloperProfile;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -31,13 +32,13 @@ class DeveloperProfileRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?DeveloperProfile
-    //    {
-    //        return $this->createQueryBuilder('d')
-    //            ->andWhere('d.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+       public function findOneByUser(User $user): ?DeveloperProfile
+       {
+           return $this->createQueryBuilder('d')
+               ->andWhere('d.user = :val')
+               ->setParameter('val', $user)
+               ->getQuery()
+               ->getOneOrNullResult()
+           ;
+       }
 }
