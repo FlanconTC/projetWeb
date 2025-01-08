@@ -1,48 +1,68 @@
 {% block nav %}
-<div class="container">
-    <nav class="navbar navbar-expand-lg bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{{ path('app_home_page') }}">Adopte un dev</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    {% if app.request.pathInfo ends with '/' %}
-                    <li class="nav-item">
-                        <a class="nav-link  active" aria-current="page"  href="{{ path('app_home_page') }}">Matching</a>
-                    </li>
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" aria-current="page"  href="{{ path('app_home_page') }}">Matching</a>
-                    </li>
-                    {% endif %}
-                    {% if app.request.pathInfo ends with '/messagerie' %}
-                    <li class="nav-item">
-                        <a class="nav-link active"  href="{{ path('app_messagerie') }}">Messagerie</a>
-                    </li>
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link"  href="{{ path('app_messagerie') }}">Messagerie</a>
-                    </li>
-                    {% endif %}
-                    <li class="nav-item dropdown">
-                        <button class="nav-link dropdown-toggle" id="navbarDropdown" data-bs-toggle="dropdown" aria-expanded="false" onKeyPress="handleKeyPress(event)">
-                            Mon Compte
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="{{ path('profile_view') }}" onclick="window.location.href=this.href;">Profil</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{{ path('app_logout') }}" onclick="window.location.href=this.href;">Déconnexion</a></li>
-                        </ul>
-                    </li>
-                </ul>
-                <form class="d-flex  ms-auto" role="search" action="/search" method="GET" >
-                        <input class="form-control me-2" type="search" name="q" placeholder="Un poste en vue ?" aria-label="Search">
-                    <button class="btn btn-outline-success me-2" type="submit">Rechercher</button>
-                </form>
-            </div>
-        </div>
-    </nav>
-</div>    
+	<div class="container">
+		<nav class="navbar navbar-expand-lg bg-light">
+			<div class="container-fluid">
+				<a class="navbar-brand" href="{{ path('app_home_page') }}">Adopte un dev</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarNav">
+					<ul class="navbar-nav me-auto">
+						{% if app.request.pathInfo ends with '/' %}
+							<li class="nav-item">
+								<a class="nav-link  active" aria-current="page" href="{{ path('app_home_page') }}">Matching</a>
+							</li>
+						{% else %}
+							<li class="nav-item">
+								<a class="nav-link" aria-current="page" href="{{ path('app_home_page') }}">Matching</a>
+							</li>
+						{% endif %}
+						{% if app.request.pathInfo ends with '/messagerie' %}
+							<li class="nav-item">
+								<a class="nav-link active" href="{{ path('app_messagerie') }}">Messagerie</a>
+							</li>
+						{% else %}
+							<li class="nav-item">
+								<a class="nav-link" href="{{ path('app_messagerie') }}">Messagerie</a>
+							</li>
+						{% endif %}
+						{% if is_granted('ROLE_COMPANY') %}
+							<li class="nav-item dropdown">
+								<button class="nav-link dropdown-toggle" id="navbarDropdown" data-bs-toggle="dropdown" aria-expanded="false" onkeypress="handleKeyPress(event)">
+									Fiche de poste
+								</a>
+								<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+									<li>
+										<a class="dropdown-item" href="{{ path('job_post_list') }}" onclick="window.location.href=this.href;">Liste</a>
+									</li>
+									<li><hr class="dropdown-divider"></li>
+									<li>
+										<a class="dropdown-item" href="{{ path('job_post_new') }}" onclick="window.location.href=this.href;">Cree</a>
+									</li>
+								</ul>
+							</li>
+						{% endif %}
+						<li class="nav-item dropdown">
+							<button class="nav-link dropdown-toggle" id="navbarDropdown" data-bs-toggle="dropdown" aria-expanded="false" onkeypress="handleKeyPress(event)">
+								Mon Compte
+							</a>
+							<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+								<li>
+									<a class="dropdown-item" href="{{ path('profile_view') }}" onclick="window.location.href=this.href;">Profil</a>
+								</li>
+								<li><hr class="dropdown-divider"></li>
+								<li>
+									<a class="dropdown-item" href="{{ path('app_logout') }}" onclick="window.location.href=this.href;">Déconnexion</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+					<form class="d-flex  ms-auto" role="search" action="/search" method="GET">
+						<input class="form-control me-2" type="search" name="q" placeholder="Un poste en vue ?" aria-label="Search">
+						<button class="btn btn-outline-success me-2" type="submit">Rechercher</button>
+					</form>
+				</div>
+			</div>
+		</nav>
+	</div>
 {% endblock %}

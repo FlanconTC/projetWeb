@@ -16,7 +16,7 @@
                             <h5 class="card-title">Informations personnelles</h5>
                             <p><i class="fas fa-user"></i> <strong>Nom d'utilisateur :</strong> {{ user.username }}</p>
                             <p><i class="fas fa-envelope"></i> <strong>Email :</strong> {{ user.email }}</p>
-                            {% if user.developerProfile %}
+                            {% if is_granted('ROLE_DEV') %}
                                 <p><i class="fas fa-map-marker-alt"></i> <strong>Localisation :</strong> {{ user.developerProfile.location }}</p>
                                 <p><i class="fas fa-code"></i> <strong>Langages de programmation :</strong> {{ user.developerProfile.programmingLanguages|join(', ') }}</p>
                                 <p><i class="fas fa-euro-sign"></i> <strong>Salaire minimum :</strong> {{ user.developerProfile.minimunSalary }}€</p>
@@ -24,7 +24,7 @@
                             {% endif %}
                         </div>
 
-                        {% if user.developerProfile %}
+                        {% if is_granted('ROLE_DEV') %}
                             <!-- Avatar -->
                             <div class="col-md-4 text-center">
                                 {% if user.developerProfile.avatar %}
