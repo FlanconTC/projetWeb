@@ -36,6 +36,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+    #[ORM\Column]
+    private ?bool $prive = false;
+
     #[ORM\Column(length: 255, unique: true)]
     private ?string $email = null;
 
@@ -123,6 +126,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getPrive(): ?string
+    {
+        return $this->prive;
+    }
+
+    public function setPrive(bool $val): static
+    {
+        $this->prive = $val;
+
+        return $this;
+    }
     /**
      * A visual identifier that represents this user.
      *
