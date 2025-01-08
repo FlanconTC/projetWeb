@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Profil{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <h2 class="text-center mb-4">Mon Profil</h2>
+
+            <div class="card shadow mb-4">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <!-- Informations utilisateur -->
+                        <div class="col-md-8">
+                            <h5 class="card-title">Informations personnelles</h5>
+                            <p><i class="fas fa-user"></i> <strong>Nom d'utilisateur :</strong> {{ user.username }}</p>
+                            <p><i class="fas fa-envelope"></i> <strong>Email :</strong> {{ user.email }}</p>
+                            {% if user.developerProfile %}
+                                <p><i class="fas fa-map-marker-alt"></i> <strong>Localisation :</strong> {{ user.developerProfile.location }}</p>
+                                <p><i class="fas fa-code"></i> <strong>Langages de programmation :</strong> {{ user.developerProfile.programmingLanguages|join(', ') }}</p>
+                                <p><i class="fas fa-euro-sign"></i> <strong>Salaire minimum :</strong> {{ user.developerProfile.minimunSalary }}€</p>
+                                <p><i class="fas fa-info-circle"></i> <strong>Biographie :</strong> {{ user.developerProfile.biography }}</p>
+                            {% endif %}
+                        </div>
+
+                        {% if user.developerProfile %}
+                            <!-- Avatar -->
+                            <div class="col-md-4 text-center">
+                                {% if user.developerProfile.avatar %}
+                                    <img src="{{ asset('avatars/' ~ user.developerProfile.avatar) }}" alt="Avatar" class="rounded-circle shadow" style="width: 150px; height: 150px;">
+                                {% else %}
+                                    <p class="text-muted">Aucun avatar</p>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bouton Modifier -->
+            {% if user.developerProfile %}
+                <div class="text-center mt-4">
+                    <a href="{{ path('profile_edit_dev') }}" class="btn btn-primary btn-lg shadow">Modifier mon profil</a>
+                </div>
+            {% else %}
+                <div class="text-center mt-4">
+                    <a href="{{ path('profile_edit_company') }}" class="btn btn-primary btn-lg shadow">Modifier mon profil</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

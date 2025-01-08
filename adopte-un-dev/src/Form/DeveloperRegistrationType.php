@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Form;
 
 use App\Entity\DeveloperProfile;
@@ -14,14 +15,24 @@ class DeveloperRegistrationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('username', TextType::class, ['label' => 'Nom d\'utilisateur'])
-            ->add('email', TextType::class, ['label' => 'Adresse email'])
+            ->add('username', TextType::class, [
+                'label_html' => true,
+                'label' => '<i class="fas fa-user"></i> <strong>Nom d\'utilisateur</strong>',
+                'attr' => ['class' => 'form-control'],
+            ])
+            ->add('email', TextType::class, [
+                'label_html' => true,
+                'label' => '<i class="fas fa-envelope"></i> <strong>Email :</strong>',
+                'attr' => ['class' => 'form-control'],
+            ])
             ->add('plainPassword', PasswordType::class, [
                 'mapped' => false,
-                'label' => 'Mot de passe',
+                'label_html' => true,
+                'label' => '<i class="fas fa-lock"></i> <strong>Mot de passe</strong>',
+                'attr' => ['class' => 'form-control'],
             ])
             ->add('developerProfile', DeveloperProfileType::class, [
-                'label' => false, // Désactive le label pour le sous-formulaire
+                'label' => false,
             ]);
     }
 

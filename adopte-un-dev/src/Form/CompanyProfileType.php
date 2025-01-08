@@ -2,16 +2,15 @@
 
 namespace App\Form;
 
-use App\Entity\Entreprise;
 use App\Entity\User;
+use App\Entity\CompanyProfile;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CompanyRegistrationType extends AbstractType
+class CompanyProfileType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -21,7 +20,7 @@ class CompanyRegistrationType extends AbstractType
                 'label' => '<i class="fas fa-user"></i> <strong>Nom d\'utilisateur</strong>',
                 'attr' => ['class' => 'form-control'],
             ])
-            ->add('email', EmailType::class, [
+            ->add('email', TextType::class, [
                 'label_html' => true,
                 'label' => '<i class="fas fa-envelope"></i> <strong>Email :</strong>',
                 'attr' => ['class' => 'form-control'],

@@ -18,12 +18,14 @@ class DeveloperProfileType extends AbstractType
     {
         $builder
             ->add('location', TextType::class, [
-                'label' => 'Localisation',
+                'label_html' => true,
+                'label' => '<i class="fas fa-map-marker-alt"></i> <strong>Localisation :</strong>',
                 'required' => false,
-                'attr' => ['class' => 'form-control'],
+                'attr' => ['class' => 'form-control mb-3'],
             ])
             ->add('programmingLanguages', ChoiceType::class, [
-                'label' => 'Langages de programmation',
+                'label_html' => true,
+                'label' => '<i class="fas fa-code"></i> <strong>Langages de programmation :</strong>',
                 'choices' => [
                     'PHP' => 'php',
                     'JavaScript' => 'javascript',
@@ -42,7 +44,7 @@ class DeveloperProfileType extends AbstractType
                 'expanded' => false,
                 'attr' => [
                     'id' => 'developerProfile_programmingLanguages',
-                    'class' => 'form-select'
+                    'class' => 'form-select mb-3'
                 ],
             ])
             // ->add('experienceLevel', ChoiceType::class, [
@@ -59,10 +61,11 @@ class DeveloperProfileType extends AbstractType
             //     'attr' => ['class' => 'form-select'],
             // ])
             ->add('minimunSalary', IntegerType::class, [
-                'label' => 'Salaire minimum souhaité',
+                'label_html' => true,
+                'label' => '<i class="fas fa-euro-sign"></i> <strong>Salaire minimum :</strong>',
                 'required' => true,
                 'attr' => [
-                    'class' => 'form-control',
+                    'class' => 'form-control mb-3',
                     'min' => 0,
                     'max' => 100000,
                 ],
@@ -77,15 +80,17 @@ class DeveloperProfileType extends AbstractType
                 ],
             ])
             ->add('biography', TextareaType::class, [
-                'label' => 'Biographie',
+                'label_html' => true,
+                'label' => '<i class="fas fa-info-circle"></i> <strong>Biographie :</strong>',
                 'required' => false,
-                'attr' => ['class' => 'form-control', 'rows' => 5],
+                'attr' => ['class' => 'form-control mb-3', 'rows' => 5],
             ])
             ->add('avatar', FileType::class, [
-                'label' => 'Avatar (image)',
+                'label_html' => true,
+                'label' => '<i class="fas fa-user-circle"></i> <strong>Avatar(Image) :</strong>',
                 'required' => false,
                 'mapped' => false, // Ne lie pas directement à l'entité (doit être géré manuellement)
-                'attr' => ['class' => 'form-control-file form-control'],
+                'attr' => ['class' => 'form-control-file form-control mb-3'],
             ]);
     }
 

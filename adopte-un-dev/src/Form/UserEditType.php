@@ -15,11 +15,13 @@ class UserEditType extends AbstractType
     {
         $builder
             ->add('username', TextType::class, [
-                'label' => 'Nom d\'utilisateur',
+                'label_html' => true,
+                'label' => '<i class="fas fa-user"></i> <strong>Nom d\'utilisateur</strong>',
                 'attr' => ['class' => 'form-control'],
             ])
             ->add('email', EmailType::class, [
-                'label' => 'Adresse email',
+                'label_html' => true,
+                'label' => '<i class="fas fa-envelope"></i> <strong>Email :</strong>',
                 'attr' => ['class' => 'form-control'],
             ]);
 

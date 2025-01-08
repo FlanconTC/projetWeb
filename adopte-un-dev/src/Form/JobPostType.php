@@ -20,10 +20,13 @@ class JobPostType extends AbstractType
         $builder
             ->add('title', TextType::class, [
                 'label' => 'Titre du poste',
+                'attr' => ['class' => 'form-control'],
             ])
             ->add('location', TextType::class, [
-                'label' => 'Localisation',
+                'label_html' => true,
+                'label' => '<i class="fas fa-map-marker-alt"></i> <strong>Localisation :</strong>',
                 'required' => false,
+                'attr' => ['class' => 'form-control'],
             ])
             ->add('requiredTechnologies', ChoiceType::class, [
                 'label' => 'Technologies recherchées',
@@ -51,19 +54,23 @@ class JobPostType extends AbstractType
             ->add('requiredExperience', IntegerType::class, [
                 'label' => 'Niveau d\'expérience requis (en années)',
                 'required' => false,
+                'attr' => ['class' => 'form-control'],
             ])
             ->add('offeredSalary', IntegerType::class, [
                 'label' => 'Salaire proposé',
                 'required' => false,
+                'attr' => ['class' => 'form-control'],
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'Description détaillée',
                 'required' => false,
+                'attr' => ['class' => 'form-control'],
             ])
             ->add('company', EntityType::class, [
                 'class' => User::class,
-                'choice_label' => 'username', // ou 'email' si vous préférez
+                'choice_label' => 'username', // ou 'email' si vous préférez et faire en sorte de ne pas pouvoir le modifier (hidden)
                 'label' => 'Entreprise',
+                'attr' => ['class' => 'form-control'],
             ])
         ;
     }

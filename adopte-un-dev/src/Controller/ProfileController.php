@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\CompanyProfileType;
 use App\Form\UserEditType;
 use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,8 +14,23 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ProfileController extends AbstractController
 {
-    #[Route('/profile', name: 'app_profile')]
-    public function edit(Request $request, EntityManagerInterface $entityManager, FileUploader $fileUploader): Response
+
+    #[Route('/profile/view', name: 'profile_view')]
+    public function view(): Response
+    {
+        $user = $this->getUser();
+
+        if (!$user) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour accéder à cette page.');
+        }
+
+        return $this->render('profile/view.html.twig', [
+            'user' => $user,
+        ]);
+    }
+
+    #[Route('/profile/edit/dev', name: 'profile_edit_dev')]
+    public function editDev(Request $request, EntityManagerInterface $entityManager, FileUploader $fileUploader): Response
     {
         // Récupère l'utilisateur connecté
         $user = $this->getUser();
@@ -50,10 +66,36 @@ class ProfileController extends AbstractController
 
             $this->addFlash('success', 'Vos informations ont été mises à jour avec succès.');
 
-            return $this->redirectToRoute('app_profile');
+            return $this->redirectToRoute('profile_edit_dev');
         }
 
-        return $this->render('profile/edit.html.twig', [
+        return $this->render('profile/edit_dev.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/profile/edit/company', name: 'profile_edit_company')]
+    public function editComapny(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+
+        if (!$user) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour modifier votre profil.');
+        }
+
+        $form = $this->createForm(CompanyProfileType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Votre profil a été mis à jour avec succès.');
+
+            return $this->redirectToRoute('profile_edit_company');
+        }
+
+        return $this->render('profile/edit_company.html.twig', [
             'form' => $form->createView(),
         ]);
     }
