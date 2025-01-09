@@ -1,3 +1,25 @@
 body {
     background-color: rgb(255, 255, 255);
 }
+
+.messages ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.messages li {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    max-width: 60%;
+}
+
+.messages .sent {
+    background-color: #d1e7dd;
+    align-self: flex-end;
+}
+
+.messages .received {
+    background-color: #f8d7da;
+    align-self: flex-start;
+}

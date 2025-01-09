@@ -36,7 +36,7 @@
 									<p>
 										<i class="fas fa-tools"></i>
 										<strong>Niveau d'expertise :</strong>
-										{% if user.developerProfile.experienceLevel == 0 %}
+										{% if user.developerProfile.experienceLevel == 0  or user.developerProfile.experienceLevel == NULL%}
 											<i class="fas fa-seedling"></i>
 											Débutant
 										{% elseif user.developerProfile.experienceLevel == 1 %}

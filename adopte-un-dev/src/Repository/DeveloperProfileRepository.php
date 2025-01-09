@@ -20,7 +20,7 @@ class DeveloperProfileRepository extends ServiceEntityRepository
     public function findOneByUser(User $user): ?DeveloperProfile
     {
         return $this->createQueryBuilder('d')
-            ->andWhere('d.user_id = :val')
+            ->andWhere('d.user = :val')
             ->setParameter('val', $user)
             ->getQuery()
             ->getOneOrNullResult()
@@ -35,5 +35,15 @@ class DeveloperProfileRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult()
         ;
+    }
+
+    public function findLatestDevelopers(): array
+    {
+        return $this->createQueryBuilder('dp')
+            ->join('dp.user', 'u') // Relation entre DeveloperProfile et User
+            ->orderBy('u.createdAt', 'DESC') // Utilisation de createdAt de User
+            ->setMaxResults(3)
+            ->getQuery()
+            ->getResult();
     }
 }

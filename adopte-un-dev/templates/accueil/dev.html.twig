@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil Développeurs{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <h1 class="text-center mb-5">Accueil - Développeurs</h1>
+
+        <div class="content-section mb-5">
+            <h2 class="text-center text-primary mb-4">Postes les plus populaires</h2>
+            {% if popularPosts is not empty %}
+                <ul class="list-group">
+                    {% for post in popularPosts %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>{{ post.title }}</strong><br>
+                                <span class="text-muted">{{ post.location }}</span>
+                            </div>
+                            <span class="badge bg-primary rounded-pill">Vues: {{ post.analytics|length }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-center text-muted">Aucun poste populaire pour le moment.</p>
+            {% endif %}
+        </div>
+
+        <div class="content-section">
+            <h2 class="text-center text-success mb-4">Dernières offres publiées</h2>
+            {% if latestPosts is not empty %}
+                <ul class="list-group">
+                    {% for post in latestPosts %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>{{ post.title }}</strong><br>
+                                <span class="text-muted">{{ post.location }}</span>
+                            </div>
+                            <span class="text-muted">Publié le: {{ post.createdAt|date('d/m/Y') }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-center text-muted">Aucune offre publiée pour le moment.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

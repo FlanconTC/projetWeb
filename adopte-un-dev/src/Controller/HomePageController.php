@@ -90,7 +90,7 @@ class HomePageController extends AbstractController
 
                     $jsonBody = [
                         'ftl' => $ftl,
-                        'id' => $user['id'],
+                        'id_utilisateur' => $user['id'],
                         'nom' => $user['username'],
                         'bio' => $dev->getBiography(),
                         'icon' => $dev->getAvatar(),

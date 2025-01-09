@@ -46,4 +46,24 @@ class JobPostRepository extends ServiceEntityRepository
                 ->getOneOrNullResult()
            ;
        }
+
+       public function findPopularPosts(): array
+       {
+           return $this->createQueryBuilder('jp')
+               ->join('jp.analytics', 'a')
+               ->groupBy('jp.id')
+               ->orderBy('SUM(a.viewCount)', 'DESC')
+               ->setMaxResults(3)
+               ->getQuery()
+               ->getResult();
+       }
+   
+       public function findLatestPosts(): array
+       {
+           return $this->createQueryBuilder('jp')
+               ->orderBy('jp.createdAt', 'DESC')
+               ->setMaxResults(3)
+               ->getQuery()
+               ->getResult();
+       }
 }

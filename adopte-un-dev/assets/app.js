@@ -110,6 +110,25 @@ function paramOk() {
         return techMatch && locationMatch && noteMatch && salaryMatch;
     }
 
+
+    function getExperienceLevelIcon(expLevel) {
+        switch (expLevel) {
+            case 0:
+            case null:
+                return `<i class="fas fa-seedling"></i> Débutant`;
+            case 1:
+                return `<i class="fas fa-leaf"></i> Junior`;
+            case 2:
+                return `<i class="fas fa-tree"></i> Intermédiaire`;
+            case 3:
+                return `<i class="fas fa-mountain"></i> Confirmé`;
+            case 4:
+                return `<i class="fas fa-crown"></i> Avancé`;
+            case 5:
+                return `<i class="fas fa-star"></i> Expert`;
+        }
+    }
+
     function showUser(index) {
         const userContainer = document.getElementById('user-info-container');
         userContainer.innerHTML = ''; // Réinitialise l'affichage
@@ -139,12 +158,19 @@ function paramOk() {
                 }
             }
             if (shouldDisplayUser(user)) {
+                //vue user
+                if (user.id_utilisateur != null) {
+                    fetch(`/analytics/view_user/${user.id_utilisateur}`, {
+                        method: 'POST',
+                    }).catch(err => console.error('Erreur lors de l\'enregistrement de la vue :', err));
+                }
+                if (user.id != null) {
+                    fetch(`/analytics/view_job_post/${user.id}`, {
+                        method: 'POST',
+                    }).catch(err => console.error('Erreur lors de l\'enregistrement de la vue :', err));
+                }
 
-                const id = user.id_utilisateur || user.id; // Récupérer l'ID
-                fetch(`/analytics/view/${id}`, {
-                    method: 'POST',
-                }).catch(err => console.error('Erreur lors de l\'enregistrement de la vue :', err));
-
+                const experienceLevelHTML = getExperienceLevelIcon(user.exp);
                 const card = `
                     <div class="card mb-3 shadow-lg">
                         <div class="card-header text-center">
@@ -155,7 +181,7 @@ function paramOk() {
                             <p class="card-text"><strong>Email :</strong> ${user.email || 'Non disponible'}</p>
                             <p class="card-text"><strong>Localisation :</strong> ${user.location || 'Non renseignée'}</p>
                             <p class="card-text"><strong>Langages :</strong> ${user.prog || 'Non renseignés'}</p>
-                            <p class="card-text"><strong>Expérience :</strong> ${user.exp || 'Non renseignée'}</p>
+                            <p class="card-text"><strong>Expérience :</strong> ${experienceLevelHTML}</p>
                             <p class="card-text"><strong>Salaire :</strong> ${user.minS ? user.minS + ' €' : 'Non disponible'}</p>
                             <p class="card-text"><strong>Biographie :</strong> ${user.bio || 'Non renseignée'}</p>
                         </div>

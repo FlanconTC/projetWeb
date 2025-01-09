@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class JobPostController extends AbstractController
 {
@@ -44,12 +45,20 @@ class JobPostController extends AbstractController
         ]);
     }
     
-
     #[Route('/job-post/list', name: 'job_post_list')]
-    public function list(EntityManagerInterface $entityManager): Response
+    public function list(EntityManagerInterface $entityManager, Security $security): Response
     {
-        $jobPosts = $entityManager->getRepository(JobPost::class)->findAll();
-
+        // Récupérer l'utilisateur connecté
+        $user = $security->getUser();
+    
+        // Vérifier si l'utilisateur est connecté
+        if (!$user) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour accéder à cette page.');
+        }
+    
+        // Récupérer les job posts associés à cet utilisateur
+        $jobPosts = $entityManager->getRepository(JobPost::class)->findBy(['company' => $user]);
+    
         return $this->render('job_post/list.html.twig', [
             'jobPosts' => $jobPosts,
         ]);

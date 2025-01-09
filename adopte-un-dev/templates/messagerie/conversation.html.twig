@@ -1,0 +1,33 @@
+{% extends 'navbar.html.twig' %}
+
+{% block title %}Conversation{% endblock %}
+
+{% block body %}
+<h1>Conversation</h1>
+
+<div class="messages">
+    {% if messages is empty %}
+        <p>Aucun message dans cette conversation.</p>
+    {% else %}
+        <ul>
+            {% for message in messages %}
+                <li class="{{ message.sender.id == app.user.id ? 'sent' : 'received' }}">
+                    <strong>{{ message.sender.id == app.user.id ? 'Vous' : 'Lui/Elle' }}:</strong>
+                    {{ message.content }}
+                    <small>{{ message.createdAt|date('d/m/Y H:i') }}</small>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+
+<div class="send-message">
+    <form action="{{ path('app_messagerie_send') }}" method="POST">
+        <input type="hidden" name="recipient_id" value="{{ recipientId }}">
+        <textarea name="content" rows="4" placeholder="Écrivez votre message..." required></textarea>
+        <button type="submit">Envoyer</button>
+    </form>
+</div>
+
+<a href="{{ path('app_messagerie') }}">Retour aux conversations</a>
+{% endblock %}

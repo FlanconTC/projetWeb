@@ -14,44 +14,56 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AnalyticsController extends AbstractController
 {
-    #[Route('/analytics/view/{id}', name: 'analytics_view', methods: ['POST'])]
-    public function registerView(int $id, EntityManagerInterface $entityManager, UserRepository $userRepository, JobPostRepository $jobPostRepository, AnalyticsRepository $analyticsRepository): JsonResponse
-    {
-        $resource = null;
-        $type = null;
 
-        // Essayer de trouver d'abord un utilisateur
-        $resource = $userRepository->find($id);
-        if ($resource) {
-            $type = 'user';
-        } else {
-            // Si ce n'est pas un utilisateur, chercher une fiche de poste
-            $resource = $jobPostRepository->find($id);
-            if ($resource) {
-                $type = 'job_post';
-            }
+    #[Route('/analytics/view_job_post/{id}', name: 'analytics_view_job_post', methods: ['POST'])]
+    public function registerViewJobPost(int $id, EntityManagerInterface $entityManager, JobPostRepository $jobPostRepository, AnalyticsRepository $analyticsRepository): JsonResponse
+    {
+        // Rechercher la fiche de poste par son ID unique
+        $jobPost = $jobPostRepository->find($id);
+
+        if (!$jobPost) {
+            return new JsonResponse(['error' => 'Fiche de poste introuvable'], Response::HTTP_NOT_FOUND);
         }
 
-        if (!$resource) {
+        // Vérifier si une entrée Analytics existe déjà
+        $analytics = $analyticsRepository->findOneBy(['jobPost' => $jobPost]);
+
+        if (!$analytics) {
+            $analytics = new Analytics();
+            $analytics->setJobPost($jobPost)
+                    ->setViewCount(1)
+                    ->setLastViewedAt(new \DateTimeImmutable());
+        } else {
+            $analytics->setViewCount($analytics->getViewCount() + 1)
+                    ->setLastViewedAt(new \DateTimeImmutable());
+        }
+
+        $entityManager->persist($analytics);
+        $entityManager->flush();
+
+        return new JsonResponse(['success' => true]);
+    }
+
+    #[Route('/analytics/view_user/{id}', name: 'analytics_view', methods: ['POST'])]
+    public function registerViewUser(int $id, EntityManagerInterface $entityManager, UserRepository $userRepository, JobPostRepository $jobPostRepository, AnalyticsRepository $analyticsRepository): JsonResponse
+    {
+        $user = $userRepository->find($id);
+
+        if (!$user) {
             return new JsonResponse(['error' => 'Ressource introuvable'], Response::HTTP_NOT_FOUND);
         }
 
         // Rechercher ou créer une entrée Analytics pour la ressource
-        $criteria = $type === 'user' ? ['user' => $resource] : ['jobPost' => $resource];
-        $analytics = $analyticsRepository->findOneBy($criteria);
+        $analytics = $analyticsRepository->findOneBy(['user' => $user]);
 
         if (!$analytics) {
             $analytics = new Analytics();
-            if ($type === 'user') {
-                $analytics->setUser($resource);
-            } elseif ($type === 'job_post') {
-                $analytics->setJobPost($resource);
-            }
-            $analytics->setViewCount(1)
-                ->setLastViewedAt(new \DateTimeImmutable());
+            $analytics->setUser($user)
+                    ->setViewCount(1)
+                    ->setLastViewedAt(new \DateTimeImmutable());
         } else {
             $analytics->setViewCount($analytics->getViewCount() + 1)
-                ->setLastViewedAt(new \DateTimeImmutable());
+                    ->setLastViewedAt(new \DateTimeImmutable());
         }
 
         $entityManager->persist($analytics);

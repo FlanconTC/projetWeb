@@ -8,6 +8,15 @@
 				</button>
 				<div class="collapse navbar-collapse" id="navbarNav">
 					<ul class="navbar-nav me-auto">
+					{% if is_granted('ROLE_DEV') %}
+						<li class="nav-item">
+							<a class="nav-link {% if app.request.pathInfo ends with '/dev' %}active{% endif %}" aria-current="page" href="{{ path('app_dev') }}">Accueil</a>
+						</li>
+					{% else %}
+						<li class="nav-item">
+							<a class="nav-link {% if app.request.pathInfo ends with '/company' %}active{% endif %}" aria-current="page" href="{{ path('app_company') }}">Accueil</a>
+						</li>
+					{% endif %}
 						<li class="nav-item">
 							<a class="nav-link {% if app.request.pathInfo ends with '/' %}active{% endif %}" aria-current="page" href="{{ path('app_home_page') }}">Matching</a>
 						</li>

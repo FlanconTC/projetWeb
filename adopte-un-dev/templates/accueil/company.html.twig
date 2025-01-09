@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil Entreprises{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <h1 class="text-center mb-5">Accueil - Entreprises</h1>
+
+        <div id="sectionTopUsers" class="content-section mb-5">
+            <h2 class="text-center text-primary mb-4">Profils les plus consulté</h2>
+            {% if mostViewedDevelopers is not empty %}
+                <div class="row g-4">
+                    {% for developer in mostViewedDevelopers %}
+                        <div class="col-md-4">
+                            <div class="card border-primary shadow-sm">
+                                <div class="card-header bg-primary text-white text-center">
+                                    Profils le plus consulté
+                                </div>
+                                <div class="card-body text-center">
+                                    <h5 class="card-title text-primary mb-3">{{ developer.username }}</h5>
+                                    <p class="card-text mb-2">
+                                        <strong>Nombre de Vues :</strong> {{ developer.viewCount }}
+                                    </p>
+                                    <p class="card-text">
+                                        <strong>Dernière Vue :</strong> {{ developer.lastViewedAt|date('H:i:s d-m-Y') }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-center text-muted">Aucun profil consulté pour le moment.</p>
+            {% endif %}
+        </div>
+
+        <div id="sectionLatestProfiles" class="content-section">
+            <h2 class="text-center text-success mb-4">Derniers profils créés</h2>
+            <div class="row g-4">
+                {% for developer in latestDevelopers %}
+                    <div class="col-md-4">
+                        <div class="card border-success shadow-sm">
+                            <div class="card-header bg-success text-white text-center">
+                                Nouveau Profil
+                            </div>
+                            <div class="card-body text-center">
+                                <h5 class="card-title text-success mb-3">{{ developer.user.username }}</h5>
+                                <p class="card-text mb-2">
+                                    <strong>Localisation :</strong> {{ developer.location }}
+                                </p>
+                                <p class="card-text">
+                                    <strong>Créé le :</strong> {{ developer.user.createdAt|date('d/m/Y') }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

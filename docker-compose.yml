@@ -7,6 +7,8 @@ services:
       - .:/var/www
     depends_on:
       - db
+    environment:
+      DATABASE_URL: "mysql://root:root@db:3306/adopteundev?serverVersion=8.3.0&charset=utf8"
 
   webserver:
     image: nginx:alpine
@@ -25,7 +27,7 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: symfony_db
+      MYSQL_DATABASE: adopteundev
       MYSQL_USER: user
       MYSQL_PASSWORD: password
     volumes:
@@ -39,8 +41,8 @@ services:
       - "8080:80"  # Accède à phpMyAdmin via http://localhost:8080
     environment:
       PMA_HOST: db  # Indique le nom du service de base de données
-      PMA_USER: user  # Utilisateur MySQL
-      PMA_PASSWORD: password  # Mot de passe MySQL
+      PMA_USER: root  # Utilisateur MySQL
+      PMA_PASSWORD: root  # Mot de passe MySQL
 
 volumes:
   db_data:
