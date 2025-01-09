@@ -20,8 +20,18 @@ class DeveloperProfileRepository extends ServiceEntityRepository
     public function findOneByUser(User $user): ?DeveloperProfile
     {
         return $this->createQueryBuilder('d')
-            ->andWhere('d.user = :val')
+            ->andWhere('d.user_id = :val')
             ->setParameter('val', $user)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+    public function findOneByUserId(int $id): ?DeveloperProfile
+    {
+       
+        return $this->createQueryBuilder('d')
+            ->andWhere('d.user = :val')
+            ->setParameter('val', $id)
             ->getQuery()
             ->getOneOrNullResult()
         ;

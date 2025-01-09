@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Favoris
+{% endblock %}
+
+{% block body %}
+
+<div id="list-favorites" class="list-group">
+    {% for favori in favorites %}
+
+  <a class="list-group-item list-group-item-action" >{{favori.username}}</a>
+  {% endfor %}
+</div>
+<a class="dropdown-item" href="{{ path('profile_favoris_add') }}" onclick="window.location.href=this.href;">Favoris</a>
+{% endblock %}

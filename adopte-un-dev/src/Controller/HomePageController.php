@@ -116,7 +116,7 @@ class HomePageController extends AbstractController
 
     #[Route('/like/{id}', name: 'app_home_like')]
     #[Route('/like/{id}/{idJob}', name: 'app_home_likeJ')]
-    public function like($id, $idJob = null, Security $security, UserRepository $userRepository, MatchingRepository $matchingRepository, EntityManagerInterface $entityManager, JobPostRepository $jobPostRepository, DeveloperProfileRepository $developerProfileRepository): JsonResponse
+    public function like($id,  Security $security, UserRepository $userRepository, MatchingRepository $matchingRepository, EntityManagerInterface $entityManager, JobPostRepository $jobPostRepository, DeveloperProfileRepository $developerProfileRepository,$idJob = null): JsonResponse
     {
         $userCurrent = $security->getUser();
         $roles = $userCurrent->getRoles();
