@@ -3,8 +3,7 @@
 namespace App\Form;
 
 use App\Entity\JobPost;
-use App\Entity\User;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -19,7 +18,8 @@ class JobPostType extends AbstractType
     {
         $builder
             ->add('title', TextType::class, [
-                'label' => 'Titre du poste',
+                'label_html' => true,
+                'label' => '<i class="fas fa-pen"></i> <strong>Titre du poste :</strong>',
                 'attr' => ['class' => 'form-control mb-3'],
             ])
             ->add('location', TextType::class, [
@@ -77,14 +77,7 @@ class JobPostType extends AbstractType
                 'label' => '<i class="fas fa-info-circle"></i> <strong>Description détaillée :</strong>',
                 'required' => false,
                 'attr' => ['class' => 'form-control mb-3', 'rows' => 5],
-            ])
-            ->add('company', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'username', // ou 'email' si vous préférez et faire en sorte de ne pas pouvoir le modifier (hidden)
-                'label' => 'Entreprise',
-                'attr' => ['class' => 'form-control mb-3'],
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

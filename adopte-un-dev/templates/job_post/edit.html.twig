@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier Profil
+{% endblock %}
+
+{% block body %}
+	{% for message in app.flashes('success') %}
+		<div class="alert alert-success">{{ message }}</div>
+	{% endfor %}
+	{% for message in app.flashes('danger') %}
+		<div class="alert alert-danger">{{ message }}</div>
+	{% endfor %}
+	<div class="container mt-5">
+		<div class="row justify-content-center">
+			<div class="col-md-8">
+				<div class="card">
+					<div class="card-header bg-primary text-white text-center">
+						<h2>Modifier la fiche de poste</h2>
+					</div>
+					<div class="card-body">
+						{{ form_start(form) }}
+						{{ form_widget(form) }}
+						<button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+						{{ form_end(form) }}
+						<a href="{{ path('job_post_list') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

@@ -1,16 +1,99 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des Fiches de Poste{% endblock %}
+{% block title %}Liste des Fiches de Poste
+{% endblock %}
 
 {% block body %}
-    <h1>Liste des Fiches de Poste</h1>
-
-    <ul>
-        {% for jobPost in jobPosts %}
-            <li>
-                <strong>{{ jobPost.title }}</strong> - {{ jobPost.location }}
-                <a href="{{ path('app_login', { id: jobPost.id }) }}">Modifier</a>
-            </li>
-        {% endfor %}
-    </ul>
+	<div class="container mt-5">
+		<h1 class="text-center mb-4">Liste des Fiches de Poste</h1>
+		<div class="table-responsive">
+			<table class="table table-bordered table-striped table-hover">
+				<thead class="thead-dark text-center">
+					<tr>
+						<th>#</th>
+						<th>Titre</th>
+						<th>Localisation</th>
+						<th>Entreprise</th>
+						<th>Technologies</th>
+						<th>Expérience Requise</th>
+						<th>Salaire Proposé</th>
+						<th>Créée le</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for jobPost in jobPosts %}
+						<tr>
+							<td class="text-center">{{ loop.index }}</td>
+							<td>{{ jobPost.title }}</td>
+							<td>{{ jobPost.location ? jobPost.location : 'Non spécifiée' }}</td>
+							<td>{{ jobPost.company.username }}</td>
+							<td>
+								{% if jobPost.requiredTechnologies is not empty %}
+									<ul class="list-unstyled">
+										{% for tech in jobPost.requiredTechnologies %}
+											<li>
+												<span class="badge bg-info text-white">{{ tech }}</span>
+											</li>
+										{% endfor %}
+									</ul>
+								{% else %}
+									<span class="text-muted">Non spécifiées</span>
+								{% endif %}
+							</td>
+							<td class="text-center">
+								{% if jobPost.requiredExperience is not null %}
+									{% if jobPost.requiredExperience == 0 %}
+										<i class="fas fa-seedling"></i>
+										Débutant
+									{% elseif jobPost.requiredExperience == 1 %}
+										<i class="fas fa-leaf"></i>
+										Junior
+									{% elseif jobPost.requiredExperience == 2 %}
+										<i class="fas fa-tree"></i>
+										Intermédiaire
+									{% elseif jobPost.requiredExperience == 3 %}
+										<i class="fas fa-mountain"></i>
+										Confirmé
+									{% elseif jobPost.requiredExperience == 4 %}
+										<i class="fas fa-crown"></i>
+										Avancé
+									{% elseif jobPost.requiredExperience == 5 %}
+										<i class="fas fa-star"></i>
+										Expert
+									{% else %}
+										Non spécifié
+									{% endif %}
+								{% else %}
+									<span class="text-muted">Aucune</span>
+								{% endif %}
+							</td>
+							<td class="text-end">
+								{% if jobPost.offeredSalary is not null %}
+									{{ jobPost.offeredSalary | number_format(0, '.', ',') }}
+									€
+								{% else %}
+									<span class="text-muted">Non spécifié</span>
+								{% endif %}
+							</td>
+							<td class="text-center">{{ jobPost.createdAt|date('d/m/Y H:i') }}</td>
+							<td class="text-center">
+								<a href="{{ path('job_post_edit', { id: jobPost.id }) }}" class="btn btn-warning btn-sm">
+									<i class="fas fa-edit"></i>
+									Modifier
+								</a>
+								<form action="{{ path('job_post_delete', { id: jobPost.id }) }}" method="post" style="display:inline;">
+									<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ jobPost.id) }}">
+									<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette fiche de poste ?');">
+										<i class="fas fa-trash-alt"></i>
+										Supprimer
+									</button>
+								</form>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
 {% endblock %}
