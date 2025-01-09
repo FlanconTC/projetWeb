@@ -79,37 +79,56 @@ function paramOk() {
     }
     
     function showUser(index) {
-        document.getElementById('user-name').textContent = '';
-        document.getElementById('user-email').textContent = '';
-        document.getElementById('user-location').textContent = '';
-        document.getElementById('user-prog').textContent = '';
-        document.getElementById('user-exp').textContent = '';
-        document.getElementById('user-minS').textContent = '';
-        document.getElementById('user-bio').textContent = '';
-        document.getElementById('user-icon').src = '/avatars/empty.jpg';
-        document.getElementById('user-nameE').textContent = '';
-
+        const userContainer = document.getElementById('user-info-container');
+        userContainer.innerHTML = ''; // Réinitialise l'affichage
+    
         if (users.length > 0 && index < users.length) {
             const user = users[index];
-            const affich = shouldDisplayUser(user);
-
-            if (affich) {
-                document.getElementById('user-name').textContent = user.nom ? 'Username : ' + user.nom : 'Nom non renseigné.';
-                document.getElementById('user-email').textContent = user.email ? 'Email : ' + user.email : 'Email non disponible ou privé".';
-                document.getElementById('user-location').textContent = user.location ? 'Localisation : ' + user.location : 'Localisation non renseignée ou privée.';
-                document.getElementById('user-prog').textContent = user.prog ? 'Langages : ' + user.prog : 'Langages non renseignés.';
-                document.getElementById('user-exp').textContent = user.exp ? 'Experience pro : ' + user.exp : 'Experience pro non renseignée.';
-                document.getElementById('user-bio').textContent = user.bio ? 'Biographie : ' + user.bio : 'Biographie non renseignée.';
-                document.getElementById('user-icon').src = user.icon ? '/avatars/' + user.icon : '/avatars/empty.jpg';
-                document.getElementById('user-minS').textContent = user.minS ? 'Salaire minimum voulu : ' + user.minS : 'Salaire non disponible ou privé.';
+            if (shouldDisplayUser(user)) {
+                const card = `
+                    <div class="card mb-3 shadow-lg">
+                        <div class="card-header text-center">
+                            <img src="${user.icon ? '/avatars/' + user.icon : '/avatars/empty.png'}" 
+                                alt="Avatar" 
+                                class="img-fluid rounded-circle shadow" 
+                                style="width: 150px; height: 150px;">
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title mb-3">${user.nom || 'Nom non renseigné'}</h5>
+                            <p class="card-text"><strong>Email :</strong> ${user.email || 'Non disponible'}</p>
+                            <p class="card-text"><strong>Localisation :</strong> ${user.location || 'Non renseignée'}</p>
+                            <p class="card-text"><strong>Langages :</strong> ${user.prog || 'Non renseignés'}</p>
+                            <p class="card-text"><strong>Expérience :</strong> ${user.exp || 'Non renseignée'}</p>
+                            <p class="card-text"><strong>Salaire :</strong> ${user.minS ? user.minS + ' €' : 'Non disponible'}</p>
+                            <p class="card-text"><strong>Biographie :</strong> ${user.bio || 'Non renseignée'}</p>
+                        </div>
+                        <div class="card-footer text-center bg-light">
+                            <button id="next-user-btn" class="btn btn-primary">Suivant</button>
+                        </div>
+                    </div>`;
+                userContainer.innerHTML = card;
+                
+                document.getElementById('next-user-btn').addEventListener('click', () => {
+                    if (currentUserIndex < users.length - 1) {
+                        currentUserIndex++;
+                        showUser(currentUserIndex);
+                    } else {
+                        userContainer.innerHTML = `
+                            <div class="alert alert-info text-center" role="alert">
+                                Vous avez vu toutes les offres.
+                            </div>`;
+                    }
+                });
             }
             else
             {
                 showUser(index + 1);
             }
+        } else {
+            userContainer.innerHTML = `<p class="text-center">Aucun utilisateur correspondant aux critères n'a été trouvé.</p>`;
         }
     }
-
+    
     document.getElementById('next-user-btn').addEventListener('click', () => {
         if (currentUserIndex < users.length - 1) {
             currentUserIndex++;
@@ -123,7 +142,7 @@ function paramOk() {
             document.getElementById('user-exp').textContent = '';
             document.getElementById('user-minS').textContent = '';
             document.getElementById('user-bio').textContent = '';
-            document.getElementById('user-icon').src = '/avatars/empty.jpg' ;
+            document.getElementById('user-icon').src = '/avatars/empty.png' ;
         }
     });
 

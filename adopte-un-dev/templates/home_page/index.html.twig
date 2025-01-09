@@ -1,90 +1,208 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Swipez, jobez !{% endblock %}
+{% block title %}Swipez, jobez !
+{% endblock %}
+
+{% block stylesheets %}
+	<style>
+		.hidden {
+			display: none;
+		}
+
+		#filterSection {
+			transition: all 0.3s ease-in-out;
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+		}
+
+		button#w-100 {
+			background-color: #6c757d;
+			color: #fff;
+			transition: all 0.3s;
+		}
+
+		button#w-100:hover {
+			background-color: #5a6268;
+		}
+
+		h2,
+		h4 {
+			font-weight: bold;
+		}
+
+		.form-check-label {
+			cursor: pointer;
+		}
+
+		.btn-primary {
+			background-color: #007bff;
+			border: none;
+			transition: background-color 0.3s ease-in-out;
+		}
+
+		.btn-primary:hover {
+			background-color: #0056b3;
+		}
+
+		input[type="range"] {
+			width: 100%;
+		}
+                .card {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .card {
+            border-radius: 10px;
+            overflow: hidden;
+            max-width: 400px;
+            margin: 0 auto; /* Centrer la carte */
+        }
+
+        .card-header {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        .card img {
+            object-fit: cover;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .card-text {
+            margin-bottom: 0.5rem;
+        }
+
+        .shadow {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+	</style>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const toggleButton = document.getElementById("toggleFilters");
+            const filterSection = document.getElementById("filterSection");
+
+            toggleButton.addEventListener("click", () => {
+                filterSection.classList.toggle("hidden");
+
+                if (filterSection.classList.contains("hidden")) {
+                    toggleButton.textContent = "Afficher les filtres";
+                } else {
+                    toggleButton.textContent = "Masquer les filtres";
+                }
+            });
+
+            const ratingInput = document.getElementById("ratingInput");
+            const ratingValue = document.getElementById("ratingValue");
+
+            ratingInput.addEventListener("input", () => {
+                ratingValue.textContent = ratingInput.value;
+            });
+
+        });
+    </script>
+{% endblock %}
 
 {% block body %}
 
-{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+	{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
 
-<div class="container">
-    <div class="mt-4 p-5 bg-dark text-white rounded">
-        <div id="user-info-container">
-            <div class="row">
-                <div class="col-md-4">
-                    <h2 id="user-nameE"></h2>
-                    <img id="user-icon" src="/avatars/empty.jpg" alt="Avatar" class="rounded-circle shadow" style="width: 150px; height: 150px;">
-                </div>
-                <div class="col-md-4">
-                    <p id="user-name"></p>
-                    <p id="user-email"></p>
-                    <p id="user-bio"></p>
-                    <button id="next-user-btn">Suivant</button>
-                </div>
-                <div class="col-md-4">
-                    <p id="user-location"></p>
-                    <p id="user-prog"></p>
-                    <p id="user-exp"></p>
-                    <p id="user-minS"></p>
-                </div>
-                   
-            </div>
-        </div>
-    </div>
-    <div class="mt-4 p-5 bg-dark text-white rounded">
-        <div class="row">
-            <div class="col-md-4">
-                <h2>Paramètres de recherche :</h2>
-                <label>
-                    <input type="checkbox" id="dev" checked="true">
-                    Voir des profils de développeurs
-                </label>
-                <br>
-                <label>
-                    <input type="checkbox" id="poste">
-                    Voir des fiches de poste
-                </label> 
-                <br>
-                <br>
-                <br>
-                <button type="button" id="valFiltre" class="btn btn-secondary">Appliquer les filtres</button>
-            </div>
-            <br>
-            <br>
-            Technologie(s) 
-            <br>
-            recherchée(s):
-            <br>
-            <br>
-            Localisation :
-            <div class="col-md-3">
-                <select id="multiSelect" multiple size="5">
-                    <option value="php">PHP</option>
-                    <option value="javascript">JavaScript</option>
-                    <option value="python">Python</option>
-                    <option value="java">Java</option>
-                    <option value="csharp">C#</option>
-                    <option value="cplusplus">C++</option>
-                    <option value="ruby">Ruby</option>
-                    <option value="go">Go</option>
-                    <option value="rust">Rust</option>
-                    <option value="typescript">TypeScript</option>
-                    <option value="swift">Swift</option>
-                    <option value="kotlin">Kotlin</option>
-                </select>
-                <input type="textbox" id="localisation">
-            </div>
-            <div class="col-md-4">
-                <p id="salaireSouhait">Salaire souhaité (max) :</p>
-                <input type="textbox" id="salaire">
-                <br>
-                <br>
-                <p>Note minimum :</p>
-                <input type="range" id="ratingInput" min="1" max="5" step="1" value="3">
-                <span id="ratingValue">3</span>
-            </div>
-        </div>
-    </div>
-</div>
-{% endif %}
+		<div class="container bg-dark text-white rounded">
+			<div class="mt-4 p-5">
+				<div id="user-info-container">
+					<div class="row">
+						<div class="col-md-4">
+							<h2 id="user-nameE">r</h2>
+							<img id="user-icon" src="/avatars/empty.png" alt="Avatar" class="rounded-circle shadow" style="width: 150px; height: 150px;">
+						</div>
+						<div class="col-md-4">
+							<p id="user-name"></p>
+							<p id="user-email"></p>
+							<p id="user-bio"></p>
+							<button id="next-user-btn">Suivant</button>
+						</div>
+						<div class="col-md-4">
+							<p id="user-location"></p>
+							<p id="user-prog"></p>
+							<p id="user-exp"></p>
+							<p id="user-minS"></p>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<div class="mt-4 p-5">
+				<button id="toggleFilters" class="btn btn-secondary w-100 mb-3">Afficher les filtres</button>
+				<div id="filterSection" class="hidden p-3 rounded bg-light text-dark">
+					<h2 class="text-center">Paramètres de recherche</h2>
+					<div class="row">
+						<div class="col-md-4 mb-3">
+							<h4>Type de profil</h4>
+							<div class="form-check">
+								<input type="checkbox" id="dev" class="form-check-input" checked>
+								<label for="dev" class="form-check-label">Voir des profils de développeurs</label>
+							</div>
+							<div class="form-check">
+								<input type="checkbox" id="poste" class="form-check-input">
+								<label for="poste" class="form-check-label">Voir des fiches de poste</label>
+							</div>
+						</div>
+						<div class="col-md-4 mb-3">
+							<h4>Filtres supplémentaires</h4>
+							<div class="form-group mb-2">
+								<label for="multiSelect">Technologie(s) recherchée(s) :</label>
+								<select id="multiSelect" class="form-control" multiple size="5">
+									<option value="php">PHP</option>
+									<option value="javascript">JavaScript</option>
+									<option value="python">Python</option>
+									<option value="java">Java</option>
+									<option value="csharp">C#</option>
+									<option value="cplusplus">C++</option>
+									<option value="ruby">Ruby</option>
+									<option value="go">Go</option>
+									<option value="rust">Rust</option>
+									<option value="typescript">TypeScript</option>
+									<option value="swift">Swift</option>
+									<option value="kotlin">Kotlin</option>
+								</select>
+							</div>
+							<div class="form-group mb-2">
+								<label for="localisation">Localisation :</label>
+								<input type="text" id="localisation" class="form-control" placeholder="Entrez une localisation">
+							</div>
+						</div>
+						<div class="col-md-4 mb-3">
+							<h4>Critères</h4>
+							<div class="form-group mb-2">
+								<label for="salaire">Salaire souhaité (max) :</label>
+								<input type="text" id="salaire" class="form-control" placeholder="Entrez un montant en €">
+							</div>
+							<div class="form-group">
+								<label for="ratingInput">Note minimum :</label>
+								<div class="d-flex align-items-center">
+									<input type="range" id="ratingInput" class="form-range me-2" min="0" max="5" step="1" value="3">
+									<span id="ratingValue" class="badge bg-primary">3</span>
+								</div>
+							</div>
+						</div>
+                        <button type="button" id="valFiltre" class="btn btn-primary">Appliquer les filtres</button>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	{% endif %}
 
 {% endblock %}
