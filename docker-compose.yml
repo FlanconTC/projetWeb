@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   app:
     build: .  # Utilise le Dockerfile dans le même répertoire
@@ -22,7 +20,7 @@ services:
       - app
 
   db:
-    image: mysql:latest
+    image: mysql:8.0
     container_name: symfony_db
     restart: always
     environment:
@@ -38,7 +36,7 @@ services:
     container_name: phpmyadmin
     restart: always
     ports:
-      - "8081:80"  # Accède à phpMyAdmin via http://localhost:8081
+      - "8080:80"  # Accède à phpMyAdmin via http://localhost:8080
     environment:
       PMA_HOST: db  # Indique le nom du service de base de données
       PMA_USER: user  # Utilisateur MySQL
