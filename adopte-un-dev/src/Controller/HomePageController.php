@@ -7,6 +7,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use App\Repository\UserRepository;
+use App\Repository\EvaluationRepository;
+use App\Repository\JobPostRepository;
 use App\Repository\DeveloperProfileRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -28,7 +30,7 @@ class HomePageController extends AbstractController
 
 
     #[Route('/date/{typeRecherche}', name: 'app_home_getusers')]
-    public function recupUsers($typeRecherche, Security $security, UserRepository $userRepository, NormalizerInterface $normalizer, DeveloperProfileRepository $developerProfileRepository): JsonResponse
+    public function recupUsers($typeRecherche, Security $security, EvaluationRepository $evaluationRepository, JobPostRepository $jobPostRepository, UserRepository $userRepository, NormalizerInterface $normalizer, DeveloperProfileRepository $developerProfileRepository): JsonResponse
     {
         if (!$security->getUser()) {
             return $this->redirectToRoute('app_login');
@@ -36,9 +38,28 @@ class HomePageController extends AbstractController
         $listeDevPourSwipe = [];
         $userC = $security->getUser();
         $roles = $userC->getRoles();
-        if ($typeRecherche == 'company') {
-            //recup l'ensemble des fiches de poste avec filtres
-        } else {
+        if ($typeRecherche == 'company') 
+        {
+            $fiches = $jobPostRepository->findOneByAll();
+            foreach ($fiches as $fiche) {
+                if($fiche != null)
+                $jsonBody = [
+                    'id' => $fiche->getCompany()->getId(),
+                    'nomE' => $fiche->getCompany()->getUsername(),
+                    'nom' => $fiche->getTitle(),
+                    'email' => $fiche->getCompany()->getEmail(),
+                    'location' => $fiche->getLocation(),
+                    'prog' => $fiche->getRequiredTechnologies(),
+                    'exp' => $fiche->getRequiredExperience(),
+                    'minS' => $fiche->getOfferedSalary(),
+                    'bio' => $fiche->getDescription(),
+                    'note' => 10
+                ];
+                array_push($listeDevPourSwipe, $jsonBody);
+            }
+        } 
+        else 
+        {
             $users = $userRepository->findUsersDev();
             $usersTrimmed = $users;
             foreach ($users as $key => $user) {
@@ -47,12 +68,14 @@ class HomePageController extends AbstractController
                 }
             }
 
-            $listeDevPourSwipe = [];
+
             foreach ($usersTrimmed as $user) {
-
+                
                 $dev = $developerProfileRepository->findOneByUser($userRepository->findOneById($user['id']));
+                
                 if ($dev != null)
-
+                $dataNote = $evaluationRepository->findOneByUser($user['id']);
+                $note = $dataNote[0]['sum']/$dataNote[0]['count'];
                     $jsonBody = [
                         'id_utilisateur' => $user['id'],
                         'nom' => $user['username'],
@@ -62,7 +85,8 @@ class HomePageController extends AbstractController
                         'exp' => $dev->getExperienceLevel(),
                         'minS' => $dev->getMinimunSalary(),
                         'bio' => $dev->getBiography(),
-                        'icon' => $dev->getAvatar()
+                        'icon' => $dev->getAvatar(),
+                        'note' => $note,
                     ];
                 array_push($listeDevPourSwipe, $jsonBody);
             }

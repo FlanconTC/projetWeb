@@ -7,6 +7,9 @@
 import './styles/app.css';
 
 document.addEventListener("DOMContentLoaded", () => {
+    if(window.location.pathname == '/')
+    {
+ 
     const dev = document.getElementById("dev");
     const poste = document.getElementById("poste");
   
@@ -41,7 +44,10 @@ document.addEventListener("DOMContentLoaded", () => {
     button.addEventListener("click", () => {
         paramOk();
       });
+             
+    }
 });
+       
 
 function paramOk()
 {
@@ -75,55 +81,76 @@ function paramOk()
         document.getElementById('user-minS').textContent = '';
         document.getElementById('user-bio').textContent = '';
         document.getElementById('user-icon').src = '/avatars/empty.jpg' ;
-
+        const image = document.getElementById('user-icon');
+        image.visibility = 'shown';
+        document.getElementById('user-nameE').textContent = '';
         // ici faire les vérification de filtre
         // tech
-        // loc
-        // salaire OK FAIRE ATTENTION FICHE POSTE
         // note
-        // poste/ dev OK
 
+        
         if (users.length > 0 && index < users.length) 
         {
+            
             const user = users[index];
+            console.log(user.note);
             const salaire = document.getElementById("salaire"); 
-                if(dev.checked)
+            const location = document.getElementById("localisation"); 
+            const note = document.getElementById("ratingInput"); 
+            if(note.value <= user.note)
+            {
+
+                if(location.value == '' || user.location.includes(location.value))
                 {
-                    if(salaire.value == '' || user.minS <= salaire.value )
+                    if(dev.checked)
                     {
-                        document.getElementById('user-name').textContent = user.nom ?  'Nom : ' + user.nom : 'Nom non renseigné.';
-                        document.getElementById('user-email').textContent = user.email ? 'Email : ' + user.email : 'Email non renseigné.';
-                        document.getElementById('user-location').textContent = user.location ?  'Adresse : ' + user.location : 'Adresse non renseignée.' ;
-                        document.getElementById('user-prog').textContent = user.prog ? 'Langages de code: ' + user.prog : 'Langages non renseignés.' ;
-                        document.getElementById('user-exp').textContent = user.exp ? 'Experience pro : ' + user.exp : 'Experience pro non renseignée.';
-                        document.getElementById('user-minS').textContent = user.minS ? 'Salaire minimum voulu : ' + user.minS : 'Salaire min voulu non renseigné.';
-                        document.getElementById('user-bio').textContent = user.bio ? 'Biographie : ' + user.bio : 'Biographie non renseignée.';
-                        document.getElementById('user-icon').src = '/avatars/' + user.icon ? '/avatars/' + user.icon : '/avatars/empty.jpg' ;
+                        if(salaire.value == '' || user.minS <= salaire.value )
+                        {
+                            document.getElementById('user-name').textContent = user.nom ?  'Nom : ' + user.nom : 'Nom non renseigné.';
+                            document.getElementById('user-email').textContent = user.email ? 'Email : ' + user.email : 'Email non renseigné.';
+                            document.getElementById('user-location').textContent = user.location ?  'Adresse : ' + user.location : 'Adresse non renseignée.' ;
+                            document.getElementById('user-prog').textContent = user.prog ? 'Langages de code: ' + user.prog : 'Langages non renseignés.' ;
+                            document.getElementById('user-exp').textContent = user.exp ? 'Experience pro : ' + user.exp : 'Experience pro non renseignée.';
+                            document.getElementById('user-minS').textContent = user.minS ? 'Salaire minimum voulu : ' + user.minS : 'Salaire min voulu non renseigné.';
+                            document.getElementById('user-bio').textContent = user.bio ? 'Biographie : ' + user.bio : 'Biographie non renseignée.';
+                            document.getElementById('user-icon').src = '/avatars/' + user.icon ? '/avatars/' + user.icon : '/avatars/empty.jpg' ;
+                        }
                     }
-                }
-                else
-                {
-                    if(salaire.value == '' || user.minS >= salaire.value)
+                    else
                     {
-                        document.getElementById('user-name').textContent = user.nom ?  'Nom : ' + user.nom : 'Nom non renseigné.';
-                        document.getElementById('user-email').textContent = user.email ? 'Email : ' + user.email : 'Email non renseigné.';
-                        document.getElementById('user-location').textContent = user.location ?  'Adresse : ' + user.location : 'Adresse non renseignée.' ;
-                        document.getElementById('user-prog').textContent = user.prog ? 'Langages de code: ' + user.prog : 'Langages non renseignés.' ;
-                        document.getElementById('user-exp').textContent = user.exp ? 'Experience pro : ' + user.exp : 'Experience pro non renseignée.';
-                        document.getElementById('user-minS').textContent = user.minS ? 'Salaire minimum voulu : ' + user.minS : 'Salaire min voulu non renseigné.';
-                        document.getElementById('user-bio').textContent = user.bio ? 'Biographie : ' + user.bio : 'Biographie non renseignée.';
-                        document.getElementById('user-icon').src = '/avatars/' + user.icon ? '/avatars/' + user.icon : '/avatars/empty.jpg' ;
-                    }
+                        const image = document.getElementById('user-icon');
+                        image.style.visibility = 'hidden';
+                        if(salaire.value == '' || user.minS >= salaire.value)
+                        {
+                            document.getElementById('user-nameE').textContent = user.nomE ;
+                            document.getElementById('user-name').textContent = user.nom ?  'Poste : ' + user.nom : 'Nom non renseigné.';
+                            document.getElementById('user-email').textContent = user.email ? 'Email : ' + user.email : 'Email non renseigné.';
+                            document.getElementById('user-location').textContent = user.location ?  'Adresse : ' + user.location : 'Adresse non renseignée.' ;
+                            document.getElementById('user-prog').textContent = user.prog ? 'Langages de code: ' + user.prog : 'Langages non renseignés.' ;
+                            document.getElementById('user-exp').textContent = user.exp ? 'Experience pro souhaitée : ' + user.exp : 'Experience pro non renseignée.';
+                            document.getElementById('user-minS').textContent = user.minS ? 'Salaire offert : ' + user.minS : 'Salaire min voulu non renseigné.';
+                            document.getElementById('user-bio').textContent = user.bio ? 'Biographie : ' + user.bio : 'Biographie non renseignée.';
+                        }                                                       
+                    } 
                 }
             }
         }
+    }
 
     document.getElementById('next-user-btn').addEventListener('click', () => {
         if (currentUserIndex < users.length - 1) {
             currentUserIndex++;
             showUser(currentUserIndex);
         } else {
-            alert('Fin de la liste des utilisateurs!');
+            document.getElementById('user-nameE').textContent = 'Vous avez vu toutes les offres.';
+            document.getElementById('user-name').textContent = '';
+            document.getElementById('user-email').textContent = '';
+            document.getElementById('user-location').textContent = '' ;
+            document.getElementById('user-prog').textContent = '' ;
+            document.getElementById('user-exp').textContent = '';
+            document.getElementById('user-minS').textContent = '';
+            document.getElementById('user-bio').textContent = '';
+            document.getElementById('user-icon').src = '/avatars/empty.jpg' ;
         }
     });
     fetchUsers();

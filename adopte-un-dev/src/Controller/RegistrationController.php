@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\DeveloperProfile;
+use App\Entity\Evaluation;
 use App\Form\DeveloperRegistrationType;
 use App\Form\CompanyRegistrationType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -41,7 +42,12 @@ class RegistrationController extends AbstractController
         
             $entityManager->persist($user);
             $entityManager->flush();
-        
+            $evaluation = new Evaluation();
+            $evaluation->setEvaluatee($user);
+            $evaluation->setRating(3);
+            $evaluation->setComments('Rating automatique de départ.');
+            $entityManager->persist($evaluation);
+            $entityManager->flush();
             return $this->redirectToRoute('app_login');
         }
     

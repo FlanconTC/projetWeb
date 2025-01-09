@@ -31,13 +31,11 @@ class JobPostRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?JobPost
-    //    {
-    //        return $this->createQueryBuilder('j')
-    //            ->andWhere('j.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+       public function findOneByAll()
+       {
+           return $this->createQueryBuilder('j')
+               ->getQuery()
+               ->getResult()
+           ;
+       }
 }

@@ -15,7 +15,7 @@ class Evaluation
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'givenEvaluations')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?User $evaluator = null;
     
     #[ORM\ManyToOne(inversedBy: 'receivedEvaluations')]

@@ -31,13 +31,13 @@ class EvaluationRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?Evaluation
-    //    {
-    //        return $this->createQueryBuilder('e')
-    //            ->andWhere('e.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+       public function findOneByUser($id)
+       {
+        return $this->createQueryBuilder('e')
+        ->select('COUNT(e.id) as count, SUM(e.rating) as sum') // Calcul des agrégats
+        ->andWhere('e.evaluatee = :user') // Condition sur l'utilisateur
+        ->setParameter('user', $id) // Binding de la variable
+        ->getQuery()
+        ->getResult();
+       }
 }
