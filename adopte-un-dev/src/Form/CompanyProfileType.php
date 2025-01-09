@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Entity\CompanyProfile;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -20,7 +21,7 @@ class CompanyProfileType extends AbstractType
                 'label' => '<i class="fas fa-user"></i> <strong>Nom d\'utilisateur</strong>',
                 'attr' => ['class' => 'form-control'],
             ])
-            ->add('email', TextType::class, [
+            ->add('email', EmailType::class, [
                 'label_html' => true,
                 'label' => '<i class="fas fa-envelope"></i> <strong>Email :</strong>',
                 'attr' => ['class' => 'form-control'],

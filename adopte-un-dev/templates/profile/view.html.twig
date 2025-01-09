@@ -19,6 +19,24 @@
                             {% if is_granted('ROLE_DEV') %}
                                 <p><i class="fas fa-map-marker-alt"></i> <strong>Localisation :</strong> {{ user.developerProfile.location }}</p>
                                 <p><i class="fas fa-code"></i> <strong>Langages de programmation :</strong> {{ user.developerProfile.programmingLanguages|join(', ') }}</p>
+                                <p>
+                                    <i class="fas fa-tools"></i> <strong>Niveau d'expertise :</strong> 
+                                    {% if user.developerProfile.experienceLevel == 0 %}
+                                        <i class="fas fa-seedling"></i> Débutant
+                                    {% elseif user.developerProfile.experienceLevel == 1 %}
+                                        <i class="fas fa-leaf"></i> Junior
+                                    {% elseif user.developerProfile.experienceLevel == 2 %}
+                                        <i class="fas fa-tree"></i> Intermédiaire
+                                    {% elseif user.developerProfile.experienceLevel == 3 %}
+                                        <i class="fas fa-mountain"></i> Confirmé
+                                    {% elseif user.developerProfile.experienceLevel == 4 %}
+                                        <i class="fas fa-crown"></i> Avancé
+                                    {% elseif user.developerProfile.experienceLevel == 5 %}
+                                        <i class="fas fa-star"></i> Expert
+                                    {% else %}
+                                        Non spécifié
+                                    {% endif %}
+                                </p>
                                 <p><i class="fas fa-euro-sign"></i> <strong>Salaire minimum :</strong> {{ user.developerProfile.minimunSalary }}€</p>
                                 <p><i class="fas fa-info-circle"></i> <strong>Biographie :</strong> {{ user.developerProfile.biography }}</p>
                             {% endif %}

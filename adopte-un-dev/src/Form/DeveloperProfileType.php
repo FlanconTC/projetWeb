@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Form;
 
 use App\Entity\DeveloperProfile;
@@ -47,19 +48,6 @@ class DeveloperProfileType extends AbstractType
                     'class' => 'form-select mb-3'
                 ],
             ])
-            // ->add('experienceLevel', ChoiceType::class, [
-            //     'label' => 'Niveau d\'expérience',
-            //     'choices' => [
-            //         '0 - Débutant' => 0,
-            //         '1' => 1,
-            //         '2' => 2,
-            //         '3' => 3,
-            //         '4' => 4,
-            //         '5 - Expert' => 5,
-            //     ],
-            //     'required' => true,
-            //     'attr' => ['class' => 'form-select'],
-            // ])
             ->add('minimunSalary', IntegerType::class, [
                 'label_html' => true,
                 'label' => '<i class="fas fa-euro-sign"></i> <strong>Salaire minimum :</strong>',
