@@ -113,7 +113,7 @@ class ProfileController extends AbstractController
     }
 
     #[Route('/profile/prive', name: 'profile_prive')]
-    public function prive( EntityManagerInterface $entityManager): Response
+    public function prive(EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
 
@@ -121,7 +121,6 @@ class ProfileController extends AbstractController
             throw $this->createAccessDeniedException('Vous devez être connecté pour accéder à cette page.');
         }
 
-       
         $user->setPrive(!$user->getPrive());
         $entityManager->flush();
         return $this->redirectToRoute('profile_view');

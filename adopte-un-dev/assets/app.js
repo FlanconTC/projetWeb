@@ -1,157 +1,107 @@
-/*
- * Welcome to your app's main JavaScript file!
- *
- * This file will be included onto the page via the importmap() Twig function,
- * which should already be in your base.html.twig.
- */
 import './styles/app.css';
 
 document.addEventListener("DOMContentLoaded", () => {
-    if(window.location.pathname == '/')
-    {
- 
-    const dev = document.getElementById("dev");
-    const poste = document.getElementById("poste");
-  
-    dev.addEventListener("click", () => toggleCheckboxes(dev, poste));
-    poste.addEventListener("click", () => toggleCheckboxes(poste, dev));
-    
-    function toggleCheckboxes(current, other) 
-    {
-        if (current.checked) {
-            other.checked = false;
-        }
-        if (current == dev)
-        {
-            const labelSalaire = document.getElementById("salaireSouhait");
-            labelSalaire.textContent = "Salaire souhaité (max) :"
-        }
-        else
-        {
-            const labelSalaire = document.getElementById("salaireSouhait");
-            labelSalaire.textContent = "Salaire proposé (min) :"
-        }
-    }
-    const button = document.getElementById("valFiltre");
-    const ratingInput = document.getElementById("ratingInput");
-    const ratingValue = document.getElementById("ratingValue");
-  
-    ratingInput.addEventListener("input", () => {
-      ratingValue.textContent = ratingInput.value;
-    });
+    if (window.location.pathname == '/') {
 
-    button.addEventListener("click", () => {
-        paramOk();
-      });
-             
+        const dev = document.getElementById("dev");
+        const poste = document.getElementById("poste");
+
+        dev.addEventListener("click", () => toggleCheckboxes(dev, poste));
+        poste.addEventListener("click", () => toggleCheckboxes(poste, dev));
+
+        function toggleCheckboxes(current, other) {
+            if (current.checked) {
+                other.checked = false;
+            }
+            const labelSalaire = document.getElementById("salaireSouhait");
+            labelSalaire.textContent = current == dev ? "Salaire souhaité (max) :" : "Salaire proposé (min) :";
+        }
+
+        const button = document.getElementById("valFiltre");
+        const ratingInput = document.getElementById("ratingInput");
+        const ratingValue = document.getElementById("ratingValue");
+
+        ratingInput.addEventListener("input", () => {
+            ratingValue.textContent = ratingInput.value;
+        });
+
+        button.addEventListener("click", () => {
+            paramOk();
+        });
     }
 });
-       
 
-function paramOk()
-{
-    const dev = document.getElementById("dev"); 
+function paramOk() {
+    const dev = document.getElementById("dev");
     let urlpath = '/date/dev';
-    let currentUserIndex = 0; 
-    let users = []; 
-    if(!dev.checked)
-    {
+    let currentUserIndex = 0;
+    let users = [];
+
+    if (!dev.checked) {
         urlpath = '/date/company';
     }
+
     async function fetchUsers() {
-        
         try {
-           
             const response = await fetch(urlpath);
             const data = await response.json();
-            users = data.users; 
-            showUser(currentUserIndex); 
+            users = data.users;
+            showUser(currentUserIndex);
         } catch (error) {
             console.error('Erreur lors de la récupération des utilisateurs :', error);
         }
     }
 
+    function shouldDisplayUser(user) {
+        const salaire = document.getElementById("salaire").value;
+        const location = document.getElementById("localisation").value;
+        const note = document.getElementById("ratingInput").value;
+        const tech = document.getElementById("multiSelect");
+        const selectedTechnologies = Array.from(tech.selectedOptions).map(option => option.value);
+    
+        // Vérifier si les technologies sélectionnées sont incluses dans celles de l'utilisateur
+        const techMatch = selectedTechnologies.length === 0 || selectedTechnologies.every(tech => user.prog.includes(tech));
+    
+        // Vérifier si la localisation correspond
+        const locationMatch = location === '' || user.location.includes(location);
+    
+        // Vérifier si la note est suffisante
+        const noteMatch = user.note >= note;
+    
+        // Vérifier le salaire en fonction du type d'utilisateur (dev ou company)
+        const devChecked = document.getElementById("dev").checked;
+        const salaryMatch = devChecked 
+            ? (salaire === '' || user.minS <= parseFloat(salaire)) 
+            : (salaire === '' || user.minS >= parseFloat(salaire));
+    
+        // Retourner true si toutes les conditions sont respectées
+        return techMatch && locationMatch && noteMatch && salaryMatch;
+    }
+    
     function showUser(index) {
         document.getElementById('user-name').textContent = '';
         document.getElementById('user-email').textContent = '';
-        document.getElementById('user-location').textContent = '' ;
-        document.getElementById('user-prog').textContent = '' ;
+        document.getElementById('user-location').textContent = '';
+        document.getElementById('user-prog').textContent = '';
         document.getElementById('user-exp').textContent = '';
         document.getElementById('user-minS').textContent = '';
         document.getElementById('user-bio').textContent = '';
-        document.getElementById('user-icon').src = '/avatars/empty.jpg' ;
-        const image = document.getElementById('user-icon');
-        image.visibility = 'shown';
+        document.getElementById('user-icon').src = '/avatars/empty.jpg';
         document.getElementById('user-nameE').textContent = '';
-        // ici faire les vérification de filtre
-        // tech
 
-        if (users.length > 0 && index < users.length) 
-        {
-            var affich = false;
+        if (users.length > 0 && index < users.length) {
             const user = users[index];
-            const salaire = document.getElementById("salaire"); 
-            const location = document.getElementById("localisation"); 
-            const note = document.getElementById("ratingInput"); 
-            const tech = document.getElementById("multiSelect");
-            const selectedValues = Array.from(tech.selectedOptions).map(option => option.value);
-            if(selectedValues.length == 0 ||  selectedValues.every(element => user.prog.includes(element)))
-            {
-                if(note.value <= user.note)
-                {
+            const affich = shouldDisplayUser(user);
 
-                    if(location.value == '' || user.location.includes(location.value))
-                    {
-                        affich = true;
-                        if(dev.checked)
-                        {
-                            if(salaire.value == '' || user.minS <= salaire.value )
-                            {
-                                document.getElementById('user-name').textContent = user.nom ?  'Nom : ' + user.nom : 'Nom non renseigné.';
-                                document.getElementById('user-email').textContent = user.email ? 'Email : ' + user.email : 'Email non renseigné.';
-                                document.getElementById('user-location').textContent = user.location ?  'Adresse : ' + user.location : 'Adresse non renseignée.' ;
-                                document.getElementById('user-prog').textContent = user.prog ? 'Langages de code: ' + user.prog : 'Langages non renseignés.' ;
-                                document.getElementById('user-exp').textContent = user.exp ? 'Experience pro : ' + user.exp : 'Experience pro non renseignée.';
-                                document.getElementById('user-minS').textContent = user.minS ? 'Salaire minimum voulu : ' + user.minS : 'Salaire min voulu non renseigné.';
-                                document.getElementById('user-bio').textContent = user.bio ? 'Biographie : ' + user.bio : 'Biographie non renseignée.';
-                                document.getElementById('user-icon').src = '/avatars/' + user.icon ? '/avatars/' + user.icon : '/avatars/empty.jpg' ;
-                            }
-                        }
-                        else
-                        {
-                            const image = document.getElementById('user-icon');
-                            image.style.visibility = 'hidden';
-                            if(salaire.value == '' || user.minS >= salaire.value)
-                            {
-                                document.getElementById('user-nameE').textContent = user.nomE ;
-                                document.getElementById('user-name').textContent = user.nom ?  'Poste : ' + user.nom : 'Nom non renseigné.';
-                                document.getElementById('user-email').textContent = user.email ? 'Email : ' + user.email : 'Email non renseigné.';
-                                document.getElementById('user-location').textContent = user.location ?  'Adresse : ' + user.location : 'Adresse non renseignée.' ;
-                                document.getElementById('user-prog').textContent = user.prog ? 'Langages de code: ' + user.prog : 'Langages non renseignés.' ;
-                                document.getElementById('user-exp').textContent = user.exp ? 'Experience pro souhaitée : ' + user.exp : 'Experience pro non renseignée.';
-                                document.getElementById('user-minS').textContent = user.minS ? 'Salaire offert : ' + user.minS : 'Salaire min voulu non renseigné.';
-                                document.getElementById('user-bio').textContent = user.bio ? 'Biographie : ' + user.bio : 'Biographie non renseignée.';
-                            }                                                       
-                        } 
-                    }
-                }
-            }
-        }
-        if(!affich)
-        {
-            if (currentUserIndex < users.length - 1) {
-                currentUserIndex++;
-                showUser(currentUserIndex);
-            } else {
-                document.getElementById('user-nameE').textContent = 'Vous avez vu toutes les offres.';
-                document.getElementById('user-name').textContent = '';
-                document.getElementById('user-email').textContent = '';
-                document.getElementById('user-location').textContent = '' ;
-                document.getElementById('user-prog').textContent = '' ;
-                document.getElementById('user-exp').textContent = '';
-                document.getElementById('user-minS').textContent = '';
-                document.getElementById('user-bio').textContent = '';
-                document.getElementById('user-icon').src = '/avatars/empty.jpg' ;
+            if (affich) {
+                document.getElementById('user-name').textContent = user.nom ? 'Username : ' + user.nom : 'Nom non renseigné.';
+                document.getElementById('user-email').textContent = user.email ? 'Email : ' + user.email : 'Email non disponible ou prive.';
+                document.getElementById('user-location').textContent = user.location ? 'Localisation : ' + user.location : 'Localisation non renseignée ou prive.';
+                document.getElementById('user-prog').textContent = user.prog ? 'Langages : ' + user.prog : 'Langages non renseignés.';
+                document.getElementById('user-exp').textContent = user.exp ? 'Experience pro : ' + user.exp : 'Experience pro non renseignée.';
+                document.getElementById('user-bio').textContent = user.bio ? 'Biographie : ' + user.bio : 'Biographie non renseignée.';
+                document.getElementById('user-icon').src = user.icon ? '/avatars/' + user.icon : '/avatars/empty.jpg';
+                document.getElementById('user-minS').textContent = user.minS ? 'Salaire minimum voulu : ' + user.minS : 'Salaire non disponible ou prive.';
             }
         }
     }
@@ -172,5 +122,6 @@ function paramOk()
             document.getElementById('user-icon').src = '/avatars/empty.jpg' ;
         }
     });
+
     fetchUsers();
-};
+}
