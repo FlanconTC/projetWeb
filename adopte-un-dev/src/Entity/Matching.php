@@ -24,6 +24,9 @@ class Matching
     #[ORM\Column(nullable: true)]
     private ?int $matchScore = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $firstToLike = null;
+
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
@@ -45,6 +48,18 @@ class Matching
     public function setDeveloper(?DeveloperProfile $developer): static
     {
         $this->developer = $developer;
+
+        return $this;
+    }
+
+    public function getFirstToLike(): ?string
+    {
+        return $this->firstToLike;
+    }
+
+    public function setFirstToLike(?string $val): static
+    {
+        $this->firstToLike = $val;
 
         return $this;
     }

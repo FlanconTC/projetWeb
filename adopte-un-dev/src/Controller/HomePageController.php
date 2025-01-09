@@ -8,10 +8,13 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use App\Repository\UserRepository;
 use App\Repository\EvaluationRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\MatchingRepository;
 use App\Repository\JobPostRepository;
 use App\Repository\DeveloperProfileRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\SecurityBundle\Security;
+use App\Entity\Matching;
 
 class HomePageController extends AbstractController
 {
@@ -96,5 +99,45 @@ class HomePageController extends AbstractController
         }
 
         return new JsonResponse(['users' => $listeDevPourSwipe]);
+    }
+
+    #[Route('/like/{id}', name: 'app_home_like')]
+    #[Route('/like/{id}/{idJob}', name: 'app_home_likeJ')]
+    public function like($id, $idJob = null, Security $security, UserRepository $userRepository, MatchingRepository $matchingRepository, EntityManagerInterface $entityManager, JobPostRepository $jobPostRepository, DeveloperProfileRepository $developerProfileRepository): JsonResponse
+    {
+        $userCurrent = $security->getUser();
+        $roles = $userCurrent->getRoles();
+        $match = new Matching();
+       
+        if(in_array('ROLE_DEV', $roles))
+        {
+           $jobPost = $jobPostRepository->findOneById($id);
+           $dev = $developerProfileRepository->findOneByUser($userCurrent);
+           $ftl = 'dev';
+        }
+        else
+        {
+            $jobPost = $jobPostRepository->findOneById($idJob);
+            $dev =  $developerProfileRepository->findOneByUser($userRepository->findOneById($id));
+            $ftl = 'ent';
+        }
+
+        $match = $matchingRepository->findOneByCouple($dev, $jobPost);
+        if($match == null)
+        {
+            $match = new Matching();
+            $match->setDeveloper($dev);
+            $match->setJobPost($jobPost);
+            $match->setMatchScore(1);
+            $match->setFirstToLike($ftl);
+            $entityManager->persist($match);
+            $entityManager->flush();
+        }
+        else if($ftl != $match->getFirstToLike())
+        {
+            $match->setMatchScore(2);   //ROUTE CREER UNE MESSAGERIE
+            $entityManager->flush();
+        }
+        return new JsonResponse(['users' => 'ok']);
     }
 }

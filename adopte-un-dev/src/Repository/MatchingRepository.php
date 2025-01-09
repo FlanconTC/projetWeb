@@ -31,13 +31,15 @@ class MatchingRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?Matching
-    //    {
-    //        return $this->createQueryBuilder('m')
-    //            ->andWhere('m.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+       public function findOneByCouple($dev, $entreprise): ?Matching
+       {
+           return $this->createQueryBuilder('m')
+               ->andWhere('m.jobPost = :valE')
+               ->andWhere('m.developer = :val')
+               ->setParameter('val', $dev)
+               ->setParameter('valE', $entreprise)
+               ->getQuery()
+               ->getOneOrNullResult()
+           ;
+       }
 }

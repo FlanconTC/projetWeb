@@ -95,13 +95,17 @@ function paramOk() {
 
             if (affich) {
                 document.getElementById('user-name').textContent = user.nom ? 'Username : ' + user.nom : 'Nom non renseigné.';
-                document.getElementById('user-email').textContent = user.email ? 'Email : ' + user.email : 'Email non disponible ou prive.';
-                document.getElementById('user-location').textContent = user.location ? 'Localisation : ' + user.location : 'Localisation non renseignée ou prive.';
+                document.getElementById('user-email').textContent = user.email ? 'Email : ' + user.email : 'Email non disponible ou privé".';
+                document.getElementById('user-location').textContent = user.location ? 'Localisation : ' + user.location : 'Localisation non renseignée ou privée.';
                 document.getElementById('user-prog').textContent = user.prog ? 'Langages : ' + user.prog : 'Langages non renseignés.';
                 document.getElementById('user-exp').textContent = user.exp ? 'Experience pro : ' + user.exp : 'Experience pro non renseignée.';
                 document.getElementById('user-bio').textContent = user.bio ? 'Biographie : ' + user.bio : 'Biographie non renseignée.';
                 document.getElementById('user-icon').src = user.icon ? '/avatars/' + user.icon : '/avatars/empty.jpg';
-                document.getElementById('user-minS').textContent = user.minS ? 'Salaire minimum voulu : ' + user.minS : 'Salaire non disponible ou prive.';
+                document.getElementById('user-minS').textContent = user.minS ? 'Salaire minimum voulu : ' + user.minS : 'Salaire non disponible ou privé.';
+            }
+            else
+            {
+                showUser(index + 1);
             }
         }
     }

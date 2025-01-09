@@ -38,4 +38,14 @@ class JobPostRepository extends ServiceEntityRepository
                ->getResult()
            ;
        }
+
+       public function findOneById($val)
+       {
+           return $this->createQueryBuilder('j')
+                ->andWhere('j.id = :val')
+                ->setParameter('val', $val)
+                ->getQuery()
+                ->getOneOrNullResult()
+           ;
+       }
 }
