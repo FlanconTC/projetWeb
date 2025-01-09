@@ -1,0 +1,92 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Top Profils et Fiches de Poste
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // JavaScript pour gérer le basculement des sections
+        document.getElementById('btnTopUsers').addEventListener('click', function() {
+            document.getElementById('sectionTopUsers').classList.remove('d-none');
+            document.getElementById('sectionTopJobPosts').classList.add('d-none');
+            this.classList.replace('btn-secondary', 'btn-primary');
+            document.getElementById('btnTopJobPosts').classList.replace('btn-primary', 'btn-secondary');
+        });
+
+        document.getElementById('btnTopJobPosts').addEventListener('click', function() {
+            document.getElementById('sectionTopUsers').classList.add('d-none');
+            document.getElementById('sectionTopJobPosts').classList.remove('d-none');
+            this.classList.replace('btn-secondary', 'btn-primary');
+            document.getElementById('btnTopUsers').classList.replace('btn-primary', 'btn-secondary');
+        });
+    });
+</script>
+{% endblock %}
+
+{% block body %}
+	<div class="container mt-5">
+		<h1 class="text-center mb-4">Top Profils et Fiches de Poste</h1>
+
+		<!-- Toggle Buttons -->
+		<div class="d-flex justify-content-center mb-4">
+			<button class="btn btn-primary mx-2" id="btnTopUsers">Top Profils</button>
+			<button class="btn btn-secondary mx-2" id="btnTopJobPosts">Fiches de Poste</button>
+		</div>
+
+		<!-- Top Profils Section -->
+		<div id="sectionTopUsers" class="content-section">
+			<h2 class="text-center">Top Profils</h2>
+			{% if topUsers is not empty %}
+				<table class="table table-striped">
+					<thead class="thead-dark">
+						<tr>
+							<th>ID Utilisateur</th>
+							<th>Nombre de Vues</th>
+							<th>Dernière Vue</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for user in topUsers %}
+							<tr>
+								<td>{{ user.username }}</td>
+								<td>{{ user.viewCount }}</td>
+								<td>{{ user.lastViewedAt|date('H:i:s d-m-Y') }}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			{% else %}
+				<p class="text-center">Aucun profil consulté pour le moment.</p>
+			{% endif %}
+		</div>
+
+		<!-- Top Fiches de Poste Section -->
+		<div id="sectionTopJobPosts" class="content-section d-none">
+			<h2 class="text-center">Top Fiches de Poste</h2>
+			{% if topJobPosts is not empty %}
+				<table class="table table-striped">
+					<thead class="thead-dark">
+						<tr>
+							<th>ID Fiche de Poste</th>
+							<th>Nombre de Vues</th>
+							<th>Dernière Vue</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for jobPost in topJobPosts %}
+							<tr>
+								<td>{{ jobPost.title }}</td>
+								<td>{{ jobPost.viewCount }}</td>
+								<td>{{ jobPost.lastViewedAt|date('H:i:s d-m-Y') }}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			{% else %}
+				<p class="text-center">Aucune fiche de poste consultée pour le moment.</p>
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}

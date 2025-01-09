@@ -17,28 +17,13 @@ class DeveloperProfileRepository extends ServiceEntityRepository
         parent::__construct($registry, DeveloperProfile::class);
     }
 
-    //    /**
-    //     * @return DeveloperProfile[] Returns an array of DeveloperProfile objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('d')
-    //            ->andWhere('d.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('d.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-       public function findOneByUser(User $user): ?DeveloperProfile
-       {
-           return $this->createQueryBuilder('d')
-               ->andWhere('d.user = :val')
-               ->setParameter('val', $user)
-               ->getQuery()
-               ->getOneOrNullResult()
-           ;
-       }
+    public function findOneByUser(User $user): ?DeveloperProfile
+    {
+        return $this->createQueryBuilder('d')
+            ->andWhere('d.user = :val')
+            ->setParameter('val', $user)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }

@@ -16,30 +16,15 @@ class MatchingRepository extends ServiceEntityRepository
         parent::__construct($registry, Matching::class);
     }
 
-    //    /**
-    //     * @return Matching[] Returns an array of Matching objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('m')
-    //            ->andWhere('m.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('m.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-       public function findOneByCouple($dev, $entreprise): ?Matching
-       {
-           return $this->createQueryBuilder('m')
-               ->andWhere('m.jobPost = :valE')
-               ->andWhere('m.developer = :val')
-               ->setParameter('val', $dev)
-               ->setParameter('valE', $entreprise)
-               ->getQuery()
-               ->getOneOrNullResult()
-           ;
-       }
+    public function findOneByCouple($dev, $entreprise): ?Matching
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.jobPost = :valE')
+            ->andWhere('m.developer = :val')
+            ->setParameter('val', $dev)
+            ->setParameter('valE', $entreprise)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }

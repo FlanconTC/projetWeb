@@ -16,28 +16,33 @@ class AnalyticsRepository extends ServiceEntityRepository
         parent::__construct($registry, Analytics::class);
     }
 
-    //    /**
-    //     * @return Analytics[] Returns an array of Analytics objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('a')
-    //            ->andWhere('a.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('a.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * Récupère les top profils les plus consultés
+     */
+    public function findTopUsers(int $limit = 10): array
+    {
+        return $this->createQueryBuilder('a')
+            ->select('u.id as userId', 'u.username', 'SUM(a.viewCount) as viewCount', 'MAX(a.lastViewedAt) as lastViewedAt')
+            ->join('a.user', 'u') // Jointure avec l'utilisateur
+            ->groupBy('u.id')     // Groupement par utilisateur
+            ->orderBy('viewCount', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
 
-    //    public function findOneBySomeField($value): ?Analytics
-    //    {
-    //        return $this->createQueryBuilder('a')
-    //            ->andWhere('a.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    /**
+     * Récupère les top fiches de poste les plus consultées
+     */
+    public function findTopJobPosts(int $limit = 10): array
+    {
+        return $this->createQueryBuilder('a')
+            ->select('j.id as jobPostId', 'j.title', 'SUM(a.viewCount) as viewCount', 'MAX(a.lastViewedAt) as lastViewedAt')
+            ->join('a.jobPost', 'j') // Jointure avec la fiche de poste
+            ->groupBy('j.id')        // Groupement par fiche de poste
+            ->orderBy('viewCount', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
 }
