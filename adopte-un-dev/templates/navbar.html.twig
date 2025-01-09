@@ -8,24 +8,15 @@
 				</button>
 				<div class="collapse navbar-collapse" id="navbarNav">
 					<ul class="navbar-nav me-auto">
-						{% if app.request.pathInfo ends with '/' %}
-							<li class="nav-item">
-								<a class="nav-link  active" aria-current="page" href="{{ path('app_home_page') }}">Matching</a>
-							</li>
-						{% else %}
-							<li class="nav-item">
-								<a class="nav-link" aria-current="page" href="{{ path('app_home_page') }}">Matching</a>
-							</li>
-						{% endif %}
-						{% if app.request.pathInfo ends with '/messagerie' %}
-							<li class="nav-item">
-								<a class="nav-link active" href="{{ path('app_messagerie') }}">Messagerie</a>
-							</li>
-						{% else %}
-							<li class="nav-item">
-								<a class="nav-link" href="{{ path('app_messagerie') }}">Messagerie</a>
-							</li>
-						{% endif %}
+						<li class="nav-item">
+							<a class="nav-link {% if app.request.pathInfo ends with '/' %}active{% endif %}" aria-current="page" href="{{ path('app_home_page') }}">Matching</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link {% if app.request.pathInfo ends with '/messagerie' %}active{% endif %}" href="{{ path('app_messagerie') }}">Messagerie</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link {% if app.request.pathInfo ends with '/top' %}active{% endif %}" href="{{ path('analytics_top') }}">Le Top</a>
+						</li>
 						{% if is_granted('ROLE_COMPANY') %}
 							<li class="nav-item dropdown">
 								<button class="nav-link dropdown-toggle" id="navbarDropdown" data-bs-toggle="dropdown" aria-expanded="false" onkeypress="handleKeyPress(event)">
