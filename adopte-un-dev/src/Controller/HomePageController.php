@@ -19,15 +19,22 @@ use App\Entity\Matching;
 class HomePageController extends AbstractController
 {
     #[Route('/', name: 'app_home_page')]
-    public function index(Security $security): Response
+    public function index(Security $security, JobPostRepository $jobPostRepository): Response
     {
         // Vérifier si l'utilisateur est authentifié
         if (!$security->getUser()) {
             return $this->redirectToRoute('app_login');
         }
-
+        $userCurrent = $security->getUser();
+        $roles = $userCurrent->getRoles();
+        $arrayJob = [];
+        if(in_array('ROLE_COMPANY', $roles))
+        {
+            $arrayJob = $jobPostRepository->findByCompany($userCurrent);
+        }
         return $this->render('home_page/index.html.twig', [
             'controller_name' => 'HomePageController',
+            'arrayJob' => $arrayJob
         ]);
     }
 
@@ -41,13 +48,18 @@ class HomePageController extends AbstractController
         $listeDevPourSwipe = [];
         $userC = $security->getUser();
         $roles = $userC->getRoles();
-
+        $ftl = 'comp';
+        if(in_array('ROLE_DEV', $roles))
+        {
+            $ftl = "dev";
+        }
         if ($typeRecherche == 'company') {
             $fiches = $jobPostRepository->findOneByAll();
             foreach ($fiches as $fiche) {
                 if ($fiche != null) {
                     $jsonBody = [
-                        'id' => $fiche->getCompany()->getId(),
+                        'ftl' => $ftl,
+                        'id' => $fiche->getId(),
                         'nomE' => $fiche->getCompany()->getUsername(),
                         'nom' => $fiche->getTitle(),
                         'email' => $fiche->getCompany()->getEmail(),
@@ -77,7 +89,8 @@ class HomePageController extends AbstractController
                     $note = $dataNote[0]['sum'] / $dataNote[0]['count'];
 
                     $jsonBody = [
-                        'id_utilisateur' => $user['id'],
+                        'ftl' => $ftl,
+                        'id' => $user['id'],
                         'nom' => $user['username'],
                         'bio' => $dev->getBiography(),
                         'icon' => $dev->getAvatar(),
@@ -139,5 +152,18 @@ class HomePageController extends AbstractController
             $entityManager->flush();
         }
         return new JsonResponse(['users' => 'ok']);
+    }
+
+    #[Route('/api/user/role', name: 'user_role')]
+    public function getRoles(Security $security): JsonResponse
+    {
+        $userCurrent = $security->getUser();
+        $roles = $userCurrent->getRoles();
+        $roleLib = ["role" =>'userComp'];
+        if(in_array('ROLE_DEV', $roles))
+        {
+            $roleLib = ["role" =>'userDev'];
+        }
+        return new JsonResponse(['roles' => $roleLib]);
     }
 }

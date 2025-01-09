@@ -122,25 +122,7 @@
 		<div class="container bg-dark text-white rounded">
 			<div class="mt-4 p-5">
 				<div id="user-info-container">
-					<div class="row">
-						<div class="col-md-4">
-							<h2 id="user-nameE">r</h2>
-							<img id="user-icon" src="/avatars/empty.png" alt="Avatar" class="rounded-circle shadow" style="width: 150px; height: 150px;">
-						</div>
-						<div class="col-md-4">
-							<p id="user-name"></p>
-							<p id="user-email"></p>
-							<p id="user-bio"></p>
-							<button id="next-user-btn">Suivant</button>
-						</div>
-						<div class="col-md-4">
-							<p id="user-location"></p>
-							<p id="user-prog"></p>
-							<p id="user-exp"></p>
-							<p id="user-minS"></p>
-						</div>
-
-					</div>
+				
 				</div>
 			</div>
 			<div class="mt-4 p-5">
@@ -158,6 +140,15 @@
 								<input type="checkbox" id="poste" class="form-check-input">
 								<label for="poste" class="form-check-label">Voir des fiches de poste</label>
 							</div>
+							<br>
+							<label id="lblFiche" for="choix">Choisissez un poste pour liker :</label>
+							{% if is_granted('ROLE_COMPANY') %}
+							<select id="choixFiche" class="form-control" name="choix">
+								{% for fiche in arrayJob %}
+								<option value="{{ fiche.id }}">{{ fiche.title }}</option>
+								{% endfor %}
+							</select>
+							{% endif %}
 						</div>
 						<div class="col-md-4 mb-3">
 							<h4>Filtres supplémentaires</h4>
@@ -178,6 +169,8 @@
 									<option value="kotlin">Kotlin</option>
 								</select>
 							</div>
+							<button id="next-user-btn" class="btn btn-danger" hidden>Swipez</button>
+							<button id="like-user-btn" class="btn btn-success" hidden>Jobez</button>
 							<div class="form-group mb-2">
 								<label for="localisation">Localisation :</label>
 								<input type="text" id="localisation" class="form-control" placeholder="Entrez une localisation">
@@ -186,7 +179,7 @@
 						<div class="col-md-4 mb-3">
 							<h4>Critères</h4>
 							<div class="form-group mb-2">
-								<label for="salaire">Salaire souhaité (max) :</label>
+								<label id="salaireSouhait" for="salaire">Salaire souhaité (max) :</label>
 								<input type="text" id="salaire" class="form-control" placeholder="Entrez un montant en €">
 							</div>
 							<div class="form-group">

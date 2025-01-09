@@ -1,5 +1,6 @@
 import './styles/app.css';
 
+
 document.addEventListener("DOMContentLoaded", () => {
     if (window.location.pathname == '/') {
 
@@ -13,8 +14,40 @@ document.addEventListener("DOMContentLoaded", () => {
             if (current.checked) {
                 other.checked = false;
             }
+
+
+
+            async function fetchUserRoles() {
+                try {
+                    const response = await fetch('/api/user/role'); // Attendre la réponse
+                    const data = await response.json(); // Décoder le JSON
+                    const userRoles = data.roles;
+            
+                    console.log(userRoles); // Affiche les rôles
+                    if(!userRoles.role == 'userDev')
+                    {
+                        const lblFiche = document.getElementById("lblFiche");
+                        const choixFiche = document.getElementById("choixFiche");
+                        choixFiche.style.display = current == dev ? "block" : "none";
+                        lblFiche.style.display = current == dev ? "block" : "none";
+                    }
+                } catch (error) {
+                    console.error("Erreur lors de la récupération des rôles :", error);
+                }
+            }
+            fetchUserRoles();
+
+           
+                
+         
+
+           
             const labelSalaire = document.getElementById("salaireSouhait");
             labelSalaire.textContent = current == dev ? "Salaire souhaité (max) :" : "Salaire proposé (min) :";
+
+           
+            
+           
         }
 
         const button = document.getElementById("valFiltre");
@@ -81,17 +114,42 @@ function paramOk() {
     function showUser(index) {
         const userContainer = document.getElementById('user-info-container');
         userContainer.innerHTML = ''; // Réinitialise l'affichage
-    
+        var head = '';
+        var tail = '';
         if (users.length > 0 && index < users.length) {
             const user = users[index];
+            if(!document.getElementById("dev").checked)
+            {
+                head = `<h2><u>${user.nomE}</u></h2>`
+                if(user.ftl != "dev")
+                {
+                   tail = `<button id="next-user-btn" class="btn btn-danger">Swipez</button>`
+                }
+                else
+                {
+                    tail = ` <button id="next-user-btn" class="btn btn-danger">Swipez</button><button id="like-user-btn" class="btn btn-success">Jobez</button>`
+                }
+            }
+            else
+            {
+                head = `<img src="${user.icon ? '/avatars/' + user.icon : '/avatars/empty.png'}" 
+                alt="Avatar" 
+                class="img-fluid rounded-circle shadow" 
+                style="width: 150px; height: 150px;">`
+                if(user.ftl == "dev")
+                {
+                   tail = `<button id="next-user-btn" class="btn btn-danger">Swipez</button>`
+                }
+                else
+                {
+                    tail = ` <button id="next-user-btn" class="btn btn-danger">Swipez</button><button id="like-user-btn" class="btn btn-success">Jobez</button>`
+                }
+            }
             if (shouldDisplayUser(user)) {
                 const card = `
                     <div class="card mb-3 shadow-lg">
                         <div class="card-header text-center">
-                            <img src="${user.icon ? '/avatars/' + user.icon : '/avatars/empty.png'}" 
-                                alt="Avatar" 
-                                class="img-fluid rounded-circle shadow" 
-                                style="width: 150px; height: 150px;">
+                            `+head+`
                         </div>
                         <div class="card-body text-center">
                             <h5 class="card-title mb-3">${user.nom || 'Nom non renseigné'}</h5>
@@ -103,12 +161,32 @@ function paramOk() {
                             <p class="card-text"><strong>Biographie :</strong> ${user.bio || 'Non renseignée'}</p>
                         </div>
                         <div class="card-footer text-center bg-light">
-                            <button id="next-user-btn" class="btn btn-primary">Suivant</button>
+                            `+tail+`
                         </div>
                     </div>`;
                 userContainer.innerHTML = card;
                 
                 document.getElementById('next-user-btn').addEventListener('click', () => {
+                    if (currentUserIndex < users.length - 1) {
+                        currentUserIndex++;
+                        showUser(currentUserIndex);
+                    } else {
+                        userContainer.innerHTML = `
+                            <div class="alert alert-info text-center" role="alert">
+                                Vous avez vu toutes les offres.
+                            </div>`;
+                    }
+                });
+                document.getElementById('like-user-btn').addEventListener('click', () => {
+                    try {
+                        const choixFiche = document.getElementById("choixFiche");
+                        var $url = `/like/${choixFiche.value}/${user.id}`;
+                        const response =  fetch($url);
+                        const data = response.json();
+                    }
+                    catch (error) {
+                        console.error('Erreur lors de la récupération des utilisateurs :', error);
+                    }
                     if (currentUserIndex < users.length - 1) {
                         currentUserIndex++;
                         showUser(currentUserIndex);
