@@ -150,8 +150,8 @@ ratingValue.textContent = ratingInput.value;
 								<label for="poste" class="form-check-label">Voir des fiches de poste</label>
 							</div>
 							<br>
-							<label id="lblFiche" for="choix">Choisissez un poste pour liker :</label>
 							{% if is_granted('ROLE_COMPANY') %}
+							<label id="lblFiche" for="choix">Choisissez un poste pour liker :</label>
 								<select id="choixFiche" class="form-control" name="choix">
 									{% for fiche in arrayJob %}
 										<option value="{{ fiche.id }}">{{ fiche.title }}</option>
