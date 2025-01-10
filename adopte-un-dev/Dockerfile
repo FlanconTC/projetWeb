@@ -18,6 +18,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Copier le script entrypoint
 COPY adopteundev.sql /var/www/adopteundev.sql
 COPY entrypoint.sh /var/www/entrypoint.sh
+
 # Donner les permissions d'exécution au script entrypoint
 RUN chmod +x /var/www/entrypoint.sh
 
