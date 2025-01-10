@@ -18,6 +18,16 @@ Suivez ces étapes pour installer et exécuter ce projet en local.
    ```bash
    git clone https://github.com/FlanconTC/projetWeb.git
 
+2. aller dans adopte-un-dev :
+   ```bash
+   cd .\adopte-un-dev\
+
+3. executer docker :
+    ```bash
+    docker-compose up
+
+Attention il se peux que l'entrypoint ne s'execute pas, faire bien attention a se que le ficher soit reconnu comme LF et pas CRLF (sur vscode voir en bas a droite).
+
 ## Répartition
 
 Le groupe de travail est composé de Tagatte Diop, Éloïse Artus, Dorian Le Peillet et Corentin Bot-Le Goascoz
