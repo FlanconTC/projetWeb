@@ -10,7 +10,7 @@ services:
     environment:
       DATABASE_URL: "mysql://root:root@db:3306/adopteundev?serverVersion=8.3.0&charset=utf8"
       APP_ENV: PROD
-    entrypoint: ["/var/www/entrypoint.sh"]
+    entrypoint: ["/bin/bash", "/var/www/entrypoint.sh"]
 
   webserver:
     image: nginx:alpine
