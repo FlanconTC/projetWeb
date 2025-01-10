@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Favorites;
 use App\Entity\DeveloperProfile;
+use App\Entity\JobPost;
 use App\Form\CompanyProfileType;
 use App\Form\UserEditType;
 use App\Service\FileUploader;
@@ -127,30 +128,42 @@ class ProfileController extends AbstractController
         $entityManager->flush();
         return $this->redirectToRoute('profile_view');
     }
-    #[Route('/profile/favoris', name: 'profile_favoris')]
+    #[Route('/favoris/view', name: 'favoris_view')]
     public function favoris(EntityManagerInterface $entityManager): Response
     {
         $id = $this->getUser()->getId();
 
         $favorites = $entityManager->getRepository(Favorites::class)->findByUserId($id);
-        return $this->render('profile/favoris.html.twig', [
+        return $this->render('favoris/view.html.twig', [
             'favorites' => $favorites, 
         ]);
     }
-    #[Route('/profile/favoris/add/{id}', name: 'profile_favoris_add')]
-    public function favoris_add(EntityManagerInterface $entityManager, $id = 0): Response
+    #[Route('/favoris/add/{idAdd}/{typeAdd}', name: 'favoris_add')]
+    public function favoris_add(EntityManagerInterface $entityManager, $idAdd = 0, $typeAdd = "dev"): Response
     {
-        
-        $favorites = $entityManager->getRepository(Favorites::class)->findUserExceptId($this->getUser()->getId());
-        if($id != 0){
+        $id = $this->getUser()->getId();
+
+        $dev = $entityManager->getRepository(Favorites::class)->findAddableUser($id);
+        $poste = $entityManager->getRepository(Favorites::class)->findAddablePost($id);
+        if($idAdd != 0){
+           
             $favoris = new Favorites();
             $favoris->setUser($this->getUser());
-            $favoris->setFavoriteDeveloper(($entityManager->getRepository(DeveloperProfile::class)->findOneByUserId($id)));
-            $entityManager->persist($favoris);
-            $entityManager->flush();
+           
+            if(!strcmp($typeAdd,"dev")){
+                $favoris->setFavoriteDeveloper(($entityManager->getRepository(DeveloperProfile::class)->findOneByUserId($idAdd)));
+                $entityManager->persist($favoris);
+                $entityManager->flush();
+            }elseif(!strcmp($typeAdd,"poste")){
+                $favoris->setFavoriteJob(($entityManager->getRepository(JobPost::class)->findOneById($idAdd)));
+                $entityManager->persist($favoris);
+                $entityManager->flush();
+            }
+            
+            
         }
-        return $this->render('profile/favoris_add.html.twig', [
-            'favorites' => $favorites, 
+        return $this->render('/favoris/add.html.twig', [
+            'devs' => $dev, 'postes' => $poste, 'test' => var_dump($typeAdd),
         ]);
     }
 }

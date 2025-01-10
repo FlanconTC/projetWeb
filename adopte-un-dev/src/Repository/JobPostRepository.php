@@ -46,6 +46,7 @@ class JobPostRepository extends ServiceEntityRepository
                 ->getOneOrNullResult()
            ;
        }
+       
 
        public function findPopularPosts(): array
        {

@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Favoris
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+		<div class="row justify-content-center">
+			<div class="col-md-8">
+				
+                    <div class="col-md-4">
+                       <table class="table">
+                            <thead>
+                                <tr>
+                                <th scope="col">Développeurs</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                {% for favori in favorites %}
+                                    {% if favori.favorite_developer_id != NULL %}
+                                    <tr>
+                                    <td>
+                                    {{favori.username}}
+                                    </td>
+                                    </tr>
+                                    {% endif %}
+                                {% endfor %}
+                                
+                           
+                            </table>
+                            </div>
+                            <div class="col-md-4">
+                            <table class="table">
+                            <thead>
+                                <tr>
+                                <th scope="col">Postes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                {% for favori in favorites %}
+                                    {% if favori.favorite_job_id != NULL %}
+                                    <tr>
+                                    <td>
+                                    {{favori.title}}
+                                    </td>
+                                    </tr>
+                                    {% endif %}
+                                {% endfor %}
+                                
+                            </tbody>
+                            </table>
+                           </div>
+                           
+                        
+                        <a class="dropdown-item" href="{{ path('favoris_add') }}" onclick="window.location.href=this.href;">Ajouter un Favoris</a>
+                        
+                    
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
