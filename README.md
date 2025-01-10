@@ -2,6 +2,8 @@
 
 ## Description
 Site de matching entre entreprises et développeurs.
+Vidéo de présentation :
+https://youtu.be/wmK5gr22Xto
 
 ## Table des matières
 1. [Description](#description)
@@ -47,4 +49,27 @@ La répartition du travail a été effectuée comme suit :
 
     2.4. Pages d'Accueil Dynamiques
 
-        ->
+        -> Dorian
+
+    2.5. Recherche Avancée
+
+        -> Corentin
+
+    2.6. Évaluations et Feedbacks
+
+        -> Fonctionnalité non ajoutée
+
+    2.7. Fonctionnalités sociales
+
+        • Favoris : Dorian
+        
+        Le reste n'a pas été ajouté.
+
+    2.8. Suivi et Analyses
+
+        -> Dorian
+
+    2.9. Backup et Déploiement
+
+        -> Dorian
+        

@@ -99,10 +99,10 @@ class HomePageController extends AbstractController
                     foreach ($ficheDePoste as $cle => $fiche) {
 
                         $dejaLike = $matchingRepository->findByIdE($fiche);
-
+                        
                         if ($dejaLike != []) {
                             foreach ($dejaLike as $keyL => $like) {
-                                if ($usersTrimmed[$key] != null) {
+                                if ($usersTrimmed[$key] != null && $like->getDeveloper() ==$usersTrimmed[$key] ) {
                                     unset($usersTrimmed[$key]);
                                 }
                             }
@@ -110,8 +110,6 @@ class HomePageController extends AbstractController
                     }
                 }
             }
-
-
 
             foreach ($usersTrimmed as $user) {
                 $dev = $developerProfileRepository->findOneByUser($userRepository->findOneById($user['id']));
