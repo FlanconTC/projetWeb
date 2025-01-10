@@ -15,15 +15,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 other.checked = false;
             }
 
-
-
             async function fetchUserRoles() {
                 try {
                     const response = await fetch('/api/user/role'); // Attendre la réponse
                     const data = await response.json(); // Décoder le JSON
                     const userRoles = data.roles;
-
-                    console.log(userRoles); // Affiche les rôles
                     if (!userRoles.role == 'userDev') {
                         const lblFiche = document.getElementById("lblFiche");
                         const choixFiche = document.getElementById("choixFiche");
@@ -35,24 +31,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
             fetchUserRoles();
-
-
-
-
-
-
             const labelSalaire = document.getElementById("salaireSouhait");
             labelSalaire.textContent = current == dev ? "Salaire souhaité (max) :" : "Salaire proposé (min) :";
-
-
-
-
         }
-
         const button = document.getElementById("valFiltre");
         const ratingInput = document.getElementById("ratingInput");
         const ratingValue = document.getElementById("ratingValue");
-
         ratingInput.addEventListener("input", () => {
             ratingValue.textContent = ratingInput.value;
         });
@@ -97,8 +81,18 @@ function paramOk() {
         // Vérifier si la localisation correspond
         const locationMatch = location === '' || user.location.includes(location);
 
+        var noteMatch = false;
+        
         // Vérifier si la note est suffisante
-        const noteMatch = user.note >= note;
+        if(!document.getElementById("dev").checked)
+        {
+            noteMatch = user.exp <= note;
+        }
+        else
+        {
+            noteMatch = user.note >= note;
+        }
+
 
         // Vérifier le salaire en fonction du type d'utilisateur (dev ou company)
         const devChecked = document.getElementById("dev").checked;
@@ -167,7 +161,7 @@ function paramOk() {
                         method: 'POST',
                     }).catch(err => console.error('Erreur lors de l\'enregistrement de la vue :', err));
                 }
-                if (user.id != null) {
+                else {
                     fetch(`/analytics/view_job_post/${user.id}`, {
                         method: 'POST',
                     }).catch(err => console.error('Erreur lors de l\'enregistrement de la vue :', err));
