@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class AnalyticsController extends AbstractController
 {
 
-    #[Route('/analytics/view_job_post/{id}', name: 'analytics_view_job_post', methods: ['POST'])]
+    #[Route('dev/analytics/view_job_post/{id}', name: 'analytics_view_job_post', methods: ['POST'])]
     public function registerViewJobPost(int $id, EntityManagerInterface $entityManager, JobPostRepository $jobPostRepository, AnalyticsRepository $analyticsRepository): JsonResponse
     {
         // Rechercher la fiche de poste par son ID unique
@@ -44,7 +44,7 @@ class AnalyticsController extends AbstractController
         return new JsonResponse(['success' => true]);
     }
 
-    #[Route('/analytics/view_user/{id}', name: 'analytics_view', methods: ['POST'])]
+    #[Route('company/analytics/view_user/{id}', name: 'analytics_view', methods: ['POST'])]
     public function registerViewUser(int $id, EntityManagerInterface $entityManager, UserRepository $userRepository, JobPostRepository $jobPostRepository, AnalyticsRepository $analyticsRepository): JsonResponse
     {
         $user = $userRepository->find($id);

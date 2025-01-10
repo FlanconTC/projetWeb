@@ -27,8 +27,7 @@ class HomePageController extends AbstractController
         $userCurrent = $security->getUser();
         $roles = $userCurrent->getRoles();
         $arrayJob = [];
-        if(in_array('ROLE_COMPANY', $roles))
-        {
+        if (in_array('ROLE_COMPANY', $roles)) {
             $arrayJob = $jobPostRepository->findByCompany($userCurrent);
         }
         return $this->render('home_page/index.html.twig', [
@@ -48,23 +47,18 @@ class HomePageController extends AbstractController
         $userC = $security->getUser();
         $roles = $userC->getRoles();
         $ftl = 'comp';
-        if(in_array('ROLE_DEV', $roles))
-        {
+        if (in_array('ROLE_DEV', $roles)) {
             $ftl = "dev";
         }
         if ($typeRecherche == 'company') {
             $fiches = $jobPostRepository->findOneByAll();
-            if($ftl == "dev")
-            {
+            if ($ftl == "dev") {
                 $dejaLike = $matchingRepository->findById($developerProfileRepository->findOneByUser($userC));
-                
-                foreach($dejaLike as $poste)
-                {
-                    
-                    foreach ($fiches as $key => $fiche) 
-                    {
-                        if($fiche->getId() == $poste->getJobPost()->getId())
-                        {
+
+                foreach ($dejaLike as $poste) {
+
+                    foreach ($fiches as $key => $fiche) {
+                        if ($fiche->getId() == $poste->getJobPost()->getId()) {
                             unset($fiches[$key]);
                         }
                     }
@@ -98,34 +92,26 @@ class HomePageController extends AbstractController
                 }
             }
 
-            if($ftl == 'comp')
-            {
+            if ($ftl == 'comp') {
                 $ficheDePoste = $jobPostRepository->findByCompany($userC);
-              
-                foreach ($usersTrimmed as $key=>$user) 
-                {
-                    foreach ($ficheDePoste as $cle=>$fiche) 
-                    {
-                        
+
+                foreach ($usersTrimmed as $key => $user) {
+                    foreach ($ficheDePoste as $cle => $fiche) {
+
                         $dejaLike = $matchingRepository->findByIdE($fiche);
-                       
-                        if($dejaLike != [])
-                        {
-                           foreach ($dejaLike as $keyL => $like) 
-                            {
-                                if($usersTrimmed[$key] != null)
-                                {
+
+                        if ($dejaLike != []) {
+                            foreach ($dejaLike as $keyL => $like) {
+                                if ($usersTrimmed[$key] != null) {
                                     unset($usersTrimmed[$key]);
                                 }
-
-                            } 
+                            }
                         }
-                        
                     }
                 }
             }
 
-            
+
 
             foreach ($usersTrimmed as $user) {
                 $dev = $developerProfileRepository->findOneByUser($userRepository->findOneById($user['id']));
@@ -161,28 +147,34 @@ class HomePageController extends AbstractController
 
     #[Route('/like/{id}', name: 'app_home_like')]
     #[Route('/like/{id}/{idJob}', name: 'app_home_likeJ')]
-    public function like($id,  Security $security, UserRepository $userRepository, MatchingRepository $matchingRepository, EntityManagerInterface $entityManager, JobPostRepository $jobPostRepository, DeveloperProfileRepository $developerProfileRepository,$idJob = null): JsonResponse
+    public function like($id,  Security $security, UserRepository $userRepository, MatchingRepository $matchingRepository, EntityManagerInterface $entityManager, JobPostRepository $jobPostRepository, DeveloperProfileRepository $developerProfileRepository, $idJob = null): JsonResponse
     {
         $userCurrent = $security->getUser();
         $roles = $userCurrent->getRoles();
         $match = new Matching();
-       
-        if(in_array('ROLE_DEV', $roles))
-        {
-           $jobPost = $jobPostRepository->findOneById($id);
-           $dev = $developerProfileRepository->findOneByUser($userCurrent);
-           $ftl = 'dev';
-        }
-        else
-        {
-            $jobPost = $jobPostRepository->findOneById($idJob);
-            $dev =  $developerProfileRepository->findOneByUser($userRepository->findOneById($id));
+
+        if (in_array('ROLE_DEV', $roles)) {
+            $jobPost = $jobPostRepository->findOneById($id);
+            $dev = $developerProfileRepository->findOneByUser($userCurrent);
+            $ftl = 'dev';
+        } else {
+
+            $fichesDePoste = $jobPostRepository->findByCompany($userCurrent);
+
+            if (empty($fichesDePoste)) {
+                return new JsonResponse([
+                    'error' => 'Vous devez créer une fiche de poste avant de pouvoir liker.',
+                    'redirect' => '/company/job-post/new', // Route pour créer une fiche de poste
+                ], 400);
+            }
+
+            $jobPost = $jobPostRepository->findOneById($id);
+            $dev =  $developerProfileRepository->findOneByUser($userRepository->findOneById($idJob));
             $ftl = 'ent';
         }
 
         $match = $matchingRepository->findOneByCouple($dev, $jobPost);
-        if($match == null)
-        {
+        if ($match == null) {
             $match = new Matching();
             $match->setDeveloper($dev);
             $match->setJobPost($jobPost);
@@ -190,9 +182,7 @@ class HomePageController extends AbstractController
             $match->setFirstToLike($ftl);
             $entityManager->persist($match);
             $entityManager->flush();
-        }
-        else if($ftl != $match->getFirstToLike())
-        {
+        } else if ($ftl != $match->getFirstToLike()) {
             $match->setMatchScore(2);   //ROUTE CREER UNE MESSAGERIE
             $entityManager->flush();
         }
@@ -204,10 +194,9 @@ class HomePageController extends AbstractController
     {
         $userCurrent = $security->getUser();
         $roles = $userCurrent->getRoles();
-        $roleLib = ["role" =>'userComp'];
-        if(in_array('ROLE_DEV', $roles))
-        {
-            $roleLib = ["role" =>'userDev'];
+        $roleLib = ["role" => 'userComp'];
+        if (in_array('ROLE_DEV', $roles)) {
+            $roleLib = ["role" => 'userDev'];
         }
         return new JsonResponse(['roles' => $roleLib]);
     }

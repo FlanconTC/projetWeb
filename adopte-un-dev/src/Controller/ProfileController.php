@@ -5,14 +5,17 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Favorites;
 use App\Entity\DeveloperProfile;
+use App\Entity\JobPost;
 use App\Form\CompanyProfileType;
 use App\Form\UserEditType;
+use App\Repository\DeveloperProfileRepository;
 use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -33,7 +36,7 @@ class ProfileController extends AbstractController
         ]);
     }
 
-    #[Route('/profile/edit/dev', name: 'profile_edit_dev')]
+    #[Route('dev/profile/edit/dev', name: 'profile_edit_dev')]
     public function editDev(Request $request, EntityManagerInterface $entityManager, FileUploader $fileUploader, UserPasswordHasherInterface $passwordHasher): Response
     {
         // Récupère l'utilisateur connecté
@@ -84,7 +87,7 @@ class ProfileController extends AbstractController
         ]);
     }
 
-    #[Route('/profile/edit/company', name: 'profile_edit_company')]
+    #[Route('company/profile/edit/company', name: 'profile_edit_company')]
     public function editComapny(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
         $user = $this->getUser();
@@ -127,30 +130,115 @@ class ProfileController extends AbstractController
         $entityManager->flush();
         return $this->redirectToRoute('profile_view');
     }
-    #[Route('/profile/favoris', name: 'profile_favoris')]
-    public function favoris(EntityManagerInterface $entityManager): Response
-    {
-        $id = $this->getUser()->getId();
 
-        $favorites = $entityManager->getRepository(Favorites::class)->findByUserId($id);
-        return $this->render('profile/favoris.html.twig', [
-            'favorites' => $favorites, 
-        ]);
-    }
-    #[Route('/profile/favoris/add/{id}', name: 'profile_favoris_add')]
-    public function favoris_add(EntityManagerInterface $entityManager, $id = 0): Response
+
+    #[Route('/profile/favorites', name: 'profile_favorites')]
+    public function showFavorites(EntityManagerInterface $entityManager): Response
     {
-        
-        $favorites = $entityManager->getRepository(Favorites::class)->findUserExceptId($this->getUser()->getId());
-        if($id != 0){
-            $favoris = new Favorites();
-            $favoris->setUser($this->getUser());
-            $favoris->setFavoriteDeveloper(($entityManager->getRepository(DeveloperProfile::class)->findOneByUserId($id)));
-            $entityManager->persist($favoris);
-            $entityManager->flush();
+        $user = $this->getUser();
+
+        if (!$user) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour voir vos favoris.');
         }
-        return $this->render('profile/favoris_add.html.twig', [
-            'favorites' => $favorites, 
+
+        $favorites = $entityManager->getRepository(Favorites::class)->findBy(['user' => $user]);
+
+        return $this->render('profile/favorites.html.twig', [
+            'favorites' => $favorites,
         ]);
     }
+
+    #[Route('/favorite/add/dev/{developerId}', name: 'favorite_add_dev', methods: ['POST'])]
+    public function addFavoriteDeveloper(int $developerId, EntityManagerInterface $entityManager, DeveloperProfileRepository $developerProfileRepository): JsonResponse {
+        $user = $this->getUser();
+    
+        if (!$user || !$this->isGranted('ROLE_COMPANY')) {
+            return $this->json(['error' => 'Accès interdit. Vous n\'avez pas les permissions nécessaires.'], Response::HTTP_FORBIDDEN);
+        }
+
+        $developerProfile = $entityManager->getRepository(DeveloperProfile::class)->findByUserIntId($developerId);
+
+        if (!$developerProfile) {
+            return $this->json(['error' => 'Développeur introuvable.'], Response::HTTP_NOT_FOUND);
+        }
+    
+        $existingFavorite = $entityManager->getRepository(Favorites::class)
+            ->findOneBy(['user' => $user, 'favoriteDeveloper' => $developerProfile]);
+    
+        if ($existingFavorite) {
+            return $this->json(['error' => 'Ce développeur est déjà en favoris.'], Response::HTTP_CONFLICT);
+        }
+    
+        $favorite = new Favorites();
+        $favorite->setUser($user);
+        $favorite->setFavoriteDeveloper($developerProfile);
+    
+        $entityManager->persist($favorite);
+        $entityManager->flush();
+    
+        return $this->json(['success' => 'Développeur ajouté aux favoris.'], Response::HTTP_CREATED);
+    }
+    
+    #[Route('/favorite/add/job/{jobPostId}', name: 'favorite_add_job', methods: ['POST'])]
+    public function addFavoriteJob(int $jobPostId, EntityManagerInterface $entityManager): JsonResponse {
+        $user = $this->getUser();
+    
+        if (!$user || !$this->isGranted('ROLE_DEV')) {
+            return $this->json(['error' => 'Accès interdit. Vous n\'avez pas les permissions nécessaires.'], Response::HTTP_FORBIDDEN);
+        }
+    
+        $jobPost = $entityManager->getRepository(JobPost::class)->find($jobPostId);
+    
+        if (!$jobPost) {
+            return $this->json(['error' => 'Fiche de poste introuvable.'], Response::HTTP_NOT_FOUND);
+        }
+    
+        $existingFavorite = $entityManager->getRepository(Favorites::class)
+            ->findOneBy(['user' => $user, 'favoriteJob' => $jobPost]);
+    
+        if ($existingFavorite) {
+            return $this->json(['error' => 'Cette fiche de poste est déjà en favoris.'], Response::HTTP_CONFLICT);
+        }
+    
+        $favorite = new Favorites();
+        $favorite->setUser($user);
+        $favorite->setFavoriteJob($jobPost);
+    
+        $entityManager->persist($favorite);
+        $entityManager->flush();
+    
+        return $this->json(['success' => 'Fiche de poste ajoutée aux favoris.'], Response::HTTP_CREATED);
+    }
+    
+    #[Route('/favorite/remove/{type}/{id}', name: 'favorite_remove', methods: ['DELETE'])]
+    public function removeFavorite(string $type, int $id, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $user = $this->getUser();
+    
+        if (!$user) {
+            return $this->json(['error' => 'Accès interdit.'], Response::HTTP_FORBIDDEN);
+        }
+    
+        // Récupérer le favori par ID
+        $favorite = $entityManager->getRepository(Favorites::class)->find($id);
+    
+        if (!$favorite || $favorite->getUser() !== $user) {
+            return $this->json(['error' => 'Favori introuvable.'], Response::HTTP_NOT_FOUND);
+        }
+    
+        // Vérifier le type et supprimer en conséquence
+        if ($type === 'developer' && $favorite->getFavoriteDeveloper() !== null && $this->isGranted('ROLE_COMPANY')) {
+            $entityManager->remove($favorite);
+        } elseif ($type === 'job' && $favorite->getFavoriteJob() !== null && $this->isGranted('ROLE_DEV')) {
+            $entityManager->remove($favorite);
+        } else {
+            return $this->json(['error' => 'Type invalide ou accès non autorisé.'], Response::HTTP_FORBIDDEN);
+        }
+    
+        // Supprimer et sauvegarder
+        $entityManager->flush();
+    
+        return $this->json(['success' => 'Favori supprimé.'], Response::HTTP_OK);
+    }
+    
 }

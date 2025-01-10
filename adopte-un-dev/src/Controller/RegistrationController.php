@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\DeveloperProfile;
+use App\Entity\JobPost;
 use App\Entity\Evaluation;
 use App\Form\DeveloperRegistrationType;
 use App\Form\CompanyRegistrationType;
@@ -69,11 +70,11 @@ class RegistrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $hashedPassword = $passwordHasher->hashPassword($user, $form->get('plainPassword')->getData());
             $user->setPassword($hashedPassword);
-
+        
             $entityManager->persist($user);
             $entityManager->flush();
-
-            return $this->redirectToRoute('app_login');
+        
+            return $this->redirectToRoute('job_post_new');
         }
 
         return $this->render('registration/register_company.html.twig', [

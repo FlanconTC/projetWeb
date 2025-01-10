@@ -15,11 +15,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 other.checked = false;
             }
 
+
+
             async function fetchUserRoles() {
                 try {
                     const response = await fetch('/api/user/role'); // Attendre la réponse
                     const data = await response.json(); // Décoder le JSON
                     const userRoles = data.roles;
+
+                    console.log(userRoles); // Affiche les rôles
                     if (!userRoles.role == 'userDev') {
                         const lblFiche = document.getElementById("lblFiche");
                         const choixFiche = document.getElementById("choixFiche");
@@ -31,12 +35,24 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
             fetchUserRoles();
+
+
+
+
+
+
             const labelSalaire = document.getElementById("salaireSouhait");
             labelSalaire.textContent = current == dev ? "Salaire souhaité (max) :" : "Salaire proposé (min) :";
+
+
+
+
         }
+
         const button = document.getElementById("valFiltre");
         const ratingInput = document.getElementById("ratingInput");
         const ratingValue = document.getElementById("ratingValue");
+
         ratingInput.addEventListener("input", () => {
             ratingValue.textContent = ratingInput.value;
         });
@@ -81,18 +97,8 @@ function paramOk() {
         // Vérifier si la localisation correspond
         const locationMatch = location === '' || user.location.includes(location);
 
-        var noteMatch = false;
-        
         // Vérifier si la note est suffisante
-        if(!document.getElementById("dev").checked)
-        {
-            noteMatch = user.exp <= note;
-        }
-        else
-        {
-            noteMatch = user.note >= note;
-        }
-
+        const noteMatch = user.note >= note;
 
         // Vérifier le salaire en fonction du type d'utilisateur (dev ou company)
         const devChecked = document.getElementById("dev").checked;
@@ -136,7 +142,7 @@ function paramOk() {
                     tail = `<button id="next-user-btn" class="btn btn-danger">Swipez</button>`
                 }
                 else {
-                    tail = ` <button id="next-user-btn" class="btn btn-danger">Swipez</button><button id="like-user-btn" class="btn btn-success">Jobez</button>`
+                    tail = ` <button id="next-user-btn" class="btn btn-danger">Swipez</button><button id="like-user-btn" class="btn btn-success">Jobez</button><button id="favorite-btn" class="btn btn-warning">Favoris</button>`
                 }
             }
             else {
@@ -149,20 +155,19 @@ function paramOk() {
                     tail = `<button id="next-user-btn" class="btn btn-danger">Swipez</button>`
                 }
                 else {
-                    tail = ` <button id="next-user-btn" class="btn btn-danger">Swipez</button><button id="like-user-btn" class="btn btn-success">Jobez</button>`
+                    tail = ` <button id="next-user-btn" class="btn btn-danger">Swipez</button><button id="like-user-btn" class="btn btn-success">Jobez</button><button id="favorite-btn" class="btn btn-warning">Favoris</button>`
                 }
             }
-           
-        
+
+
             if (shouldDisplayUser(user)) {
                 //vue user
                 if (user.id_utilisateur != null) {
-                    fetch(`/analytics/view_user/${user.id_utilisateur}`, {
+                    fetch(`company/analytics/view_user/${user.id_utilisateur}`, {
                         method: 'POST',
                     }).catch(err => console.error('Erreur lors de l\'enregistrement de la vue :', err));
-                }
-                else {
-                    fetch(`/analytics/view_job_post/${user.id}`, {
+                } else {
+                    fetch(`dev/analytics/view_job_post/${user.id}`, {
                         method: 'POST',
                     }).catch(err => console.error('Erreur lors de l\'enregistrement de la vue :', err));
                 }
@@ -199,33 +204,68 @@ function paramOk() {
                             </div>`;
                     }
                 });
-                document.getElementById('like-user-btn').addEventListener('click', () => {
+                document.getElementById('like-user-btn').addEventListener('click', async () => {
                     try {
                         const choixFiche = document.getElementById("choixFiche");
-                        if(choixFiche != null)
-                        {
-                            var $url = `/like/${choixFiche.value}/${user.id}`;
-                            fetch($url);
-                        
+                        let url;
+                
+                        if (choixFiche && choixFiche.value) {
+                            url = `/like/${choixFiche.value}/${user.id}`;
+                        } else {
+                            url = `/like/${user.id}/${user.idD}`;
                         }
-                        else
-                        {
-                            var $url = `/like/${user.id}/${user.idD}`;
-                            fetch($url);
-                          
+                
+                        const response = await fetch(url);
+                        const data = await response.json();
+                
+                        if (response.status === 400) {
+                            if (data.error) {
+                                alert(data.error);
+                                if (data.redirect) {
+                                    window.location.href = data.redirect;
+                                }
+                            }
+                        } else if (response.ok) {
+
+                            if (currentUserIndex < users.length - 1) {
+                                currentUserIndex++;
+                                showUser(currentUserIndex);
+                            } else {
+                                userContainer.innerHTML = `
+                                    <div class="alert alert-info text-center" role="alert">
+                                        Vous avez vu toutes les offres.
+                                    </div>`;
+                            }
                         }
+                    } catch (error) {
+                        console.error('Erreur lors de l\'envoi du like :', error);
                     }
-                    catch (error) {
-                        console.error('Erreur lors de la récupération des utilisateurs :', error);
-                    }
-                    if (currentUserIndex < users.length - 1) {
-                        currentUserIndex++;
-                        showUser(currentUserIndex);
-                    } else {
-                        userContainer.innerHTML = `
-                            <div class="alert alert-info text-center" role="alert">
-                                Vous avez vu toutes les offres.
-                            </div>`;
+                });
+                document.getElementById('favorite-btn').addEventListener('click', async () => {
+                    try {
+                        const choixFiche = document.getElementById("choixFiche");
+                        let url;
+                
+                        if (choixFiche && choixFiche.value) {
+                            // Ajouter une fiche de poste aux favoris
+                            url = `/favorite/add/dev/${user.id}`;
+                        } else {
+                            // Ajouter un développeur aux favoris
+                            url = `/favorite/add/job/${user.id}`;
+                        }
+                
+                        const response = await fetch(url, {
+                            method: 'POST',
+                        });
+                
+                        if (response.ok) {
+                            alert("Ajouté aux favoris avec succès !");
+                        } else {
+                            const data = await response.json();
+                            alert(data.error || "Erreur lors de l'ajout aux favoris.");
+                        }
+                    } catch (error) {
+                        console.error("Erreur lors de l'ajout aux favoris :", error);
                     }
                 });
             }

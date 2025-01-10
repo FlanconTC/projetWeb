@@ -26,12 +26,12 @@ class DeveloperProfileRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
     }
-    public function findOneByUserId(int $id): ?DeveloperProfile
+
+    public function findByUserIntId(int $user): ?DeveloperProfile
     {
-       
         return $this->createQueryBuilder('d')
             ->andWhere('d.user = :val')
-            ->setParameter('val', $id)
+            ->setParameter('val', $user)
             ->getQuery()
             ->getOneOrNullResult()
         ;
