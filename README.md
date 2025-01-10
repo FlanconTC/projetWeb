@@ -26,7 +26,7 @@ Suivez ces étapes pour installer et exécuter ce projet en local.
     ```bash
     docker-compose up
 
-Attention il se peux que l'entrypoint ne s'execute pas, faire bien attention a se que le ficher soit reconnu comme LF et pas CRLF (sur vscode voir en bas a droite juste a cliquer sur CRLF et choisir LF).
+Attention il se peux que l'entrypoint ne s'execute pas, faire bien attention a se que le ficher soit reconnu comme LF et pas CRLF (sur vscode voir en bas a droite juste a cliquer sur CRLF et choisir LF en ayant le fichier d'ouvert).
 
 ## Répartition
 
