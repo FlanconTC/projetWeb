@@ -27,4 +27,31 @@ class MatchingRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
     }
+
+    public function findById($dev)
+{
+    return $this->createQueryBuilder('m')
+        ->andWhere('m.developer = :dev')
+        ->andWhere('m.firstToLike = :val OR m.matchScore = :score')
+        ->setParameter('val', 'dev')
+        ->setParameter('score', 2)
+        ->setParameter('dev', $dev)
+        ->getQuery()
+        ->getResult();
+}
+
+    
+
+    public function findByIdE($poste)
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.jobPost = :jp')
+            ->andWhere('m.firstToLike = :val OR m.matchScore = :score')
+            ->setParameter('val', 'ent')
+            ->setParameter('score', 2)
+            ->setParameter('jp', $poste)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

@@ -147,7 +147,8 @@ function paramOk() {
             }
             else {
                 head = `<img src="${user.icon ? '/avatars/' + user.icon : '/avatars/empty.png'}" 
-                alt="Avatar" 
+                alt="" 
+                id="imageDev" 
                 class="img-fluid rounded-circle shadow" 
                 style="width: 150px; height: 150px;">`
                 if (user.ftl == "dev") {
@@ -157,6 +158,8 @@ function paramOk() {
                     tail = ` <button id="next-user-btn" class="btn btn-danger">Swipez</button><button id="like-user-btn" class="btn btn-success">Jobez</button>`
                 }
             }
+           
+        
             if (shouldDisplayUser(user)) {
                 //vue user
                 if (user.id_utilisateur != null) {
@@ -205,9 +208,18 @@ function paramOk() {
                 document.getElementById('like-user-btn').addEventListener('click', () => {
                     try {
                         const choixFiche = document.getElementById("choixFiche");
-                        var $url = `/like/${choixFiche.value}/${user.id}`;
-                        const response = fetch($url);
-                        const data = response.json();
+                        if(choixFiche != null)
+                        {
+                            var $url = `/like/${choixFiche.value}/${user.id}`;
+                            fetch($url);
+                        
+                        }
+                        else
+                        {
+                            var $url = `/like/${user.id}/${user.idD}`;
+                            fetch($url);
+                          
+                        }
                     }
                     catch (error) {
                         console.error('Erreur lors de la récupération des utilisateurs :', error);
@@ -247,6 +259,5 @@ function paramOk() {
             document.getElementById('user-icon').src = '/avatars/empty.png';
         }
     });
-
     fetchUsers();
 }

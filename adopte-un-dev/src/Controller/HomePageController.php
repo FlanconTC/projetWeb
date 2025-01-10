@@ -21,7 +21,6 @@ class HomePageController extends AbstractController
     #[Route('/', name: 'app_home_page')]
     public function index(Security $security, JobPostRepository $jobPostRepository): Response
     {
-        // Vérifier si l'utilisateur est authentifié
         if (!$security->getUser()) {
             return $this->redirectToRoute('app_login');
         }
@@ -39,7 +38,7 @@ class HomePageController extends AbstractController
     }
 
     #[Route('/date/{typeRecherche}', name: 'app_home_getusers')]
-    public function recupUsers($typeRecherche, Security $security, EvaluationRepository $evaluationRepository, JobPostRepository $jobPostRepository, UserRepository $userRepository, NormalizerInterface $normalizer, DeveloperProfileRepository $developerProfileRepository): JsonResponse
+    public function recupUsers(MatchingRepository $matchingRepository, $typeRecherche, Security $security, EvaluationRepository $evaluationRepository, JobPostRepository $jobPostRepository, UserRepository $userRepository, NormalizerInterface $normalizer, DeveloperProfileRepository $developerProfileRepository): JsonResponse
     {
         if (!$security->getUser()) {
             return $this->redirectToRoute('app_login');
@@ -55,10 +54,27 @@ class HomePageController extends AbstractController
         }
         if ($typeRecherche == 'company') {
             $fiches = $jobPostRepository->findOneByAll();
+            if($ftl == "dev")
+            {
+                $dejaLike = $matchingRepository->findById($developerProfileRepository->findOneByUser($userC));
+                
+                foreach($dejaLike as $poste)
+                {
+                    
+                    foreach ($fiches as $key => $fiche) 
+                    {
+                        if($fiche->getId() == $poste->getJobPost()->getId())
+                        {
+                            unset($fiches[$key]);
+                        }
+                    }
+                }
+            }
             foreach ($fiches as $fiche) {
                 if ($fiche != null) {
                     $jsonBody = [
                         'ftl' => $ftl,
+                        'idD' => $userC->getId(),
                         'id' => $fiche->getId(),
                         'nomE' => $fiche->getCompany()->getUsername(),
                         'nom' => $fiche->getTitle(),
@@ -77,10 +93,39 @@ class HomePageController extends AbstractController
             $users = $userRepository->findUsersDev();
             $usersTrimmed = $users;
             foreach ($users as $key => $user) {
-                if (in_array('ROLE_COMPANY', $user['roles'])) {
+                if (in_array('ROLE_COMPANY', $user['roles'])) { //FAIRE UN DEUXIEME TRIM
                     unset($usersTrimmed[$key]);
                 }
             }
+
+            if($ftl == 'comp')
+            {
+                $ficheDePoste = $jobPostRepository->findByCompany($userC);
+              
+                foreach ($usersTrimmed as $key=>$user) 
+                {
+                    foreach ($ficheDePoste as $cle=>$fiche) 
+                    {
+                        
+                        $dejaLike = $matchingRepository->findByIdE($fiche);
+                       
+                        if($dejaLike != [])
+                        {
+                           foreach ($dejaLike as $keyL => $like) 
+                            {
+                                if($usersTrimmed[$key] != null)
+                                {
+                                    unset($usersTrimmed[$key]);
+                                }
+
+                            } 
+                        }
+                        
+                    }
+                }
+            }
+
+            
 
             foreach ($usersTrimmed as $user) {
                 $dev = $developerProfileRepository->findOneByUser($userRepository->findOneById($user['id']));
@@ -90,6 +135,7 @@ class HomePageController extends AbstractController
 
                     $jsonBody = [
                         'ftl' => $ftl,
+                        'id' => $user['id'],
                         'id_utilisateur' => $user['id'],
                         'nom' => $user['username'],
                         'bio' => $dev->getBiography(),
@@ -99,7 +145,6 @@ class HomePageController extends AbstractController
                         'exp' => $dev->getExperienceLevel(),
                     ];
                     $thisUser = $userRepository->findOneById($user['id']);
-                    // Ajouter les informations sensibles si l'utilisateur n'est pas privé
                     if (!$thisUser->getPrive()) {
                         $jsonBody['email'] = $user['email'];
                         $jsonBody['minS'] = $dev->getMinimunSalary();
